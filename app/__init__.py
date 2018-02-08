@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from sqlalchemy import *
 from secure_info import user, password, host_m_1, port_m_1, host_m_2, port_m_2, host_s_1, port_s_1, host_s_2, port_s_2,\
     socket_m_1,socket_s_1,socket_m_2,socket_s_2
@@ -38,4 +38,4 @@ def root():
 @app.route('/games', methods=['GET'])
 def get_games():
     #games_s_1.select().execute()
-    return {}, 200
+    return jsonify({'hey': 'hello'}), 200
