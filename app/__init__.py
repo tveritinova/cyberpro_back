@@ -19,7 +19,7 @@ metadata_s_1 = MetaData(engine_s_1)
 metadata_m_2 = MetaData(engine_m_2)
 metadata_s_2 = MetaData(engine_s_2)
 
-session_s_1 = sessionmaker(bind=engine_s_1)
+session_s_1 = sessionmaker(bind=engine_s_1)()
 
 games_m_1 = Table('games', metadata_m_1, autoload=True)
 games_s_1 = Table('games', metadata_s_1, autoload=True)
