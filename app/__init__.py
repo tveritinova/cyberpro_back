@@ -10,10 +10,10 @@ engine_s_1 = create_engine('mysql://'+user+':'+password+'@'+host_s_1+':'+port_s_
 engine_m_2 = create_engine('mysql://'+user+':'+password+'@'+host_m_2+':'+port_m_2+'/db1.db')
 engine_s_2 = create_engine('mysql://'+user+':'+password+'@'+host_s_2+':'+port_s_2+'/db1.db')
 
-metadata_m_1 = BoundMetaData(engine_m_1)
-metadata_s_1 = BoundMetaData(engine_s_1)
-metadata_m_2 = BoundMetaData(engine_m_2)
-metadata_s_2 = BoundMetaData(engine_s_2)
+metadata_m_1 = MetaData(engine_m_1)
+metadata_s_1 = MetaData(engine_s_1)
+metadata_m_2 = MetaData(engine_m_2)
+metadata_s_2 = MetaData(engine_s_2)
 
 
 games_m_1 = Table('games', metadata_m_1, autoload=True)
