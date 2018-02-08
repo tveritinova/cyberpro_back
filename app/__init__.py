@@ -8,18 +8,18 @@ app = Flask(__name__)
 
 engine_m_1 = create_engine('mysql://'+user+':'+password+'@'+host_m_1+'/db1.db'+
                            '?unix_socket='+socket_m_1+'?host='+host_m_1)
-engine_s_1 = create_engine('mysql://'+user+':'+password+'@'+host_s_1+':'+port_s_1+'/db1.db?unix_socket='+socket_s_1)
-engine_m_2 = create_engine('mysql://'+user+':'+password+'@'+host_m_2+':'+port_m_2+'/db1.db?unix_socket='+socket_m_2)
-engine_s_2 = create_engine('mysql://'+user+':'+password+'@'+host_s_2+':'+port_s_2+'/db1.db?unix_socket='+socket_s_2)
+#engine_s_1 = create_engine('mysql://'+user+':'+password+'@'+host_s_1+':'+port_s_1+'/db1.db?unix_socket='+socket_s_1)
+#engine_m_2 = create_engine('mysql://'+user+':'+password+'@'+host_m_2+':'+port_m_2+'/db1.db?unix_socket='+socket_m_2)
+#engine_s_2 = create_engine('mysql://'+user+':'+password+'@'+host_s_2+':'+port_s_2+'/db1.db?unix_socket='+socket_s_2)
 
 metadata_m_1 = MetaData(engine_m_1)
-metadata_s_1 = MetaData(engine_s_1)
-metadata_m_2 = MetaData(engine_m_2)
-metadata_s_2 = MetaData(engine_s_2)
+#metadata_s_1 = MetaData(engine_s_1)
+#metadata_m_2 = MetaData(engine_m_2)
+#metadata_s_2 = MetaData(engine_s_2)
 
 
 games_m_1 = Table('games', metadata_m_1, autoload=True)
-games_s_1 = Table('games', metadata_s_1, autoload=True)
+#games_s_1 = Table('games', metadata_s_1, autoload=True)
 
 #sharding_dict = {}
 
@@ -38,5 +38,5 @@ def root():
 
 @app.route('/games', methods=['GET'])
 def get_games():
-    raise Exception(games_s_1.select().execute())
+    raise Exception(games_m_1.select().execute())
     return {}, 200
