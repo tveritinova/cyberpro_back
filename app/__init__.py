@@ -37,4 +37,5 @@ def root():
 
 @app.route('/games', methods=['GET'])
 def get_games():
-    return games_s_1.select().execute(), 200
+    #games_s_1.select().execute()
+    return {}, 200
