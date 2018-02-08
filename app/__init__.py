@@ -37,5 +37,4 @@ def root():
 
 @app.route('/games', methods=['GET'])
 def get_games():
-    raise Exception(games_s_1.select().execute())
-    return {}, 200
+    return games_s_1.select().execute(), 200
