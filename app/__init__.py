@@ -37,4 +37,6 @@ def root():
 
 @app.route('/games', methods=['GET'])
 def get_games():
-    return jsonify(games_s_1.select().execute()), 200
+    #games_s_1.select().execute()
+    q = games_s_1.select()
+    return jsonify({'so':'hello'}), 200
