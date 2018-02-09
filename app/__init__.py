@@ -19,10 +19,14 @@ metadata_s_1 = MetaData(engine_s_1)
 metadata_m_2 = MetaData(engine_m_2)
 metadata_s_2 = MetaData(engine_s_2)
 
+session_m_1 = sessionmaker(bind=engine_m_1)()
 session_s_1 = sessionmaker(bind=engine_s_1)()
 
-games_m_1 = Table('games', metadata_m_1, autoload=True)
-games_s_1 = Table('games', metadata_s_1, autoload=True)
+games_m_1, games_s_1 = {}
+games_m_1['table'] = Table('games', metadata_m_1, autoload=True)
+games_m_1['cols'] = [col['name'] for col in session_m_1.query(games_m_1['table']).column_descriptions]
+games_s_1['table'] = Table('games', metadata_s_1, autoload=True)
+games_s_1['cols'] = [col['name'] for col in session_s_1.query(games_s_1['table']).column_descriptions]
 
 #sharding_dict = {}
 
@@ -34,6 +38,13 @@ def choose(game_id):
         return 'db2'
 
 
+def get_json(tuple, cols):
+    res_dict = {}
+    for i in range(len(cols)):
+        res_dict[cols[i]] = tuple[i]
+    return res_dict
+
+
 @app.route('/')
 def root():
     return 'Welcome to cyber.pro portal!'
@@ -41,14 +52,15 @@ def root():
 
 @app.route('/games', methods=['GET'])
 def get_games():
-    #games_s_1.select().execute()
-    print games_m_1
-    data = session_s_1.query(games_s_1).all()
-    data_all = []
-    cols =  [col['name'] for col in session_s_1.query(games_s_1).column_descriptions]
-    for game in data:
-        res_dict = {}
-        for i in range(len(game)):
-            res_dict[cols[i]] = game[i]
-        data_all.append(res_dict)
-    return jsonify(games=data_all), 200
+    table = games_s_1
+    session = session_s_1
+    data = session.query(table['table']).all()
+    res = [get_json(game, table['cols']) for game in data]
+    return jsonify(games=res), 200
+
+@app.route('/games/<int:game_id>', method=['GET'])
+def get_game(game_id):
+    table = games_s_1
+    session = session_s_1
+    data = session.query(table['table']).get(game_id).one()
+    return jsonify(get_json(data, table['cols']))
