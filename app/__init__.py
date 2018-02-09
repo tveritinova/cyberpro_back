@@ -103,4 +103,4 @@ def put_teams(game_id):
 
     cur['teams'].insert().values(name=name, country=country)
 
-    return 200
+    return ('', 200)
