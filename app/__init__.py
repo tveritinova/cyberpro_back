@@ -101,6 +101,6 @@ def put_teams(game_id):
     name = request.args.get('name')
     country = request.args.get('country')
 
-    cur['teams'].insert().values(name=name, country=country)
+    cur['session'].execute(cur['teams'].insert().values(name=name, country=country))
 
     return ('', 200)
