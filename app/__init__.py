@@ -45,7 +45,10 @@ def get_games():
     print games_m_1
     data = session_s_1.query(games_s_1).all()
     data_all = []
-    print session_s_1.query(games_s_1).column_descriptions
+    cols =  [col['name'] for col in session_s_1.query(games_s_1).column_descriptions]
     for game in data:
-        data_all.append([])
+        res_dict = {}
+        for i in len(game):
+            res_dict[cols[i]] = game[i]
+        data_all.append(res_dict)
     return jsonify(games=data_all), 200
