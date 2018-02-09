@@ -42,7 +42,7 @@ for i in range(2):
                                              '/db1?unix_socket='+socket[i][r])
         data[i][r]['metadata'] = MetaData(data[i][r]['engine'])
         data[i][r]['session'] = sessionmaker(bind=data[i][r]['engine'])
-        data[i][r]['games'] = Table('games', data[i][r]['metadata'], autoload=True)
+        if i == 0: data[i][r]['games'] = Table('games', data[i][r]['metadata'], autoload=True)
         data[i][r]['teams'] = Table('teams', data[i][r]['metadata'], autoload=True)
 
 
@@ -79,6 +79,7 @@ def get_game(game_id):
     cur = data[1]['s']
     res_data = cur['session'].query(cur['games']).filter(cur['games'].c.id == game_id).one()
     return jsonify(get_json(res_data, get_cols(cur['session'], cur['games']))), 200
+
 
 @app.route('/games/<int:game_id>/teams', methods=['GET'])
 def get_teams(game_id):
