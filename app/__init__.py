@@ -22,7 +22,8 @@ metadata_s_2 = MetaData(engine_s_2)
 session_m_1 = sessionmaker(bind=engine_m_1)()
 session_s_1 = sessionmaker(bind=engine_s_1)()
 
-games_m_1, games_s_1 = {}
+games_m_1 = {}
+games_s_1 = {}
 games_m_1['table'] = Table('games', metadata_m_1, autoload=True)
 games_m_1['cols'] = [col['name'] for col in session_m_1.query(games_m_1['table']).column_descriptions]
 games_s_1['table'] = Table('games', metadata_s_1, autoload=True)
