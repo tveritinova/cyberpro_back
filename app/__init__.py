@@ -42,5 +42,10 @@ def root():
 @app.route('/games', methods=['GET'])
 def get_games():
     #games_s_1.select().execute()
-    print session_s_1.query(games_s_1).all()
-    return jsonify({'hey':'you'}), 200
+    print games_m_1
+    data = session_s_1.query(games_s_1).all()
+    data_all = []
+    print session_s_1.query(games_s_1).column_descriptions
+    for game in data:
+        data_all.append([])
+    return jsonify(games=data_all), 200
