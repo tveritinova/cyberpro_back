@@ -32,7 +32,7 @@ games_s_1['cols'] = [col['name'] for col in session_s_1.query(games_s_1['table']
 '''
 
 
-data = defaultdict(dict)
+data = defaultdict(defaultdict(dict))
 
 for i in range(2):
     for r in ['m', 's']:
