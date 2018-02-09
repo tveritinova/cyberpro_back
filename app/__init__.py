@@ -36,6 +36,7 @@ data = defaultdict(dict)
 
 for i in range(2):
     for r in ['m', 's']:
+        print socket[i]
         data[i][r]['engine'] = create_engine('mysql://'+user+':'+password+'@'+host[i][r]+':'+port[i][r] +
                                              '/db1?unix_socket='+socket[i][r])
         data[i][r]['metadata'] = MetaData(data[i][r]['engine'])
