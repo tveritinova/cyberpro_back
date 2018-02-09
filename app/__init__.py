@@ -82,7 +82,7 @@ def get_game(game_id):
     try:
         res_data = cur['session'].query(cur['games']).filter(cur['games'].c.id == game_id).one()
     except NoResultFound:
-        return 204
+        return ('',204)
     return jsonify(get_json(res_data, get_cols(cur['session'], cur['games']))), 200
 
 
