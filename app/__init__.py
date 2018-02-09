@@ -62,7 +62,8 @@ def get_games():
 
 @app.route('/games/<int:game_id>', methods=['GET'])
 def get_game(game_id):
-    table = games_s_1
+    table = games_s_1['table']
+    cols = games_s_1['cols']
     session = session_s_1
-    data = session.query(table['table']).get(game_id).one()
-    return jsonify(get_json(data, table['cols']))
+    data = session.query(table).filter(table.c.id == game_id).one()
+    return jsonify(get_json(data, cols))
