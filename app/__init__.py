@@ -63,6 +63,10 @@ def get_json(tuple, cols):
     return res_dict
 
 
+def get_row(id, table, session):
+    return session.query(table).filter(table.c.id == id).one()
+
+
 @app.route('/')
 def root():
     return 'Welcome to cyber.pro portal!'
@@ -103,6 +107,14 @@ def put_teams(game_id):
     name = request.args.get('name')
     country = request.args.get('country')
 
-    cur['session'].execute(cur['teams'].insert().values(name=name, country=country, game_id=game_id))
-    cur['session'].commit()
+    #game = get_row(game_id, cur['games'], cur['session'])
+    #cur['session'].execute(cur['teams'].insert().values(name=name, country=country, game_id=cur['games']))
+    #cur['session'].commit()
+    query = "insert into teams (name, country, game_id)" \
+            "select "+name+","+country+",id" \
+            "from games" \
+            "where id = "+game_id+ \
+            "limit 1"
+    res = cur['engine'].execute(query)
+    print res
     return 'success', 200
