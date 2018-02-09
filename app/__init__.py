@@ -42,7 +42,7 @@ for i in range(2):
         data[i][r]['engine'] = create_engine('mysql://'+user+':'+password+'@'+host[i][r]+':'+port[i][r] +
                                              '/db'+str(i+1)+'?unix_socket='+socket[i][r])
         data[i][r]['metadata'] = MetaData(data[i][r]['engine'])
-        data[i][r]['session'] = sessionmaker(bind=data[i][r]['engine'])
+        data[i][r]['session'] = sessionmaker(bind=data[i][r]['engine'])()
         if i == 0: data[i][r]['games'] = Table('games', data[i][r]['metadata'], autoload=True)
         data[i][r]['teams'] = Table('teams', data[i][r]['metadata'], autoload=True)
 
