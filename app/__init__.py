@@ -69,7 +69,7 @@ def root():
 
 @app.route('/games', methods=['GET'])
 def get_games():
-    cur = data[1]['s']
+    cur = data[0]['s']
     res_data = cur['session'].query(cur['games']).all()
     res_dict = [get_json(game, get_cols(cur['session'],cur['games'])) for game in res_data]
     return jsonify(games=res_dict), 200
@@ -77,7 +77,7 @@ def get_games():
 
 @app.route('/games/<int:game_id>', methods=['GET'])
 def get_game(game_id):
-    cur = data[1]['s']
+    cur = data[0]['s']
     res_data = cur['session'].query(cur['games']).filter(cur['games'].c.id == game_id).one()
     return jsonify(get_json(res_data, get_cols(cur['session'], cur['games']))), 200
 
