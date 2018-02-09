@@ -98,11 +98,11 @@ def get_teams(game_id):
 def put_teams(game_id):
     cur = data[choose(game_id)]['m']
 
-    print request.args
+    print request.args.get('name'), request.args.get('country')
 
     name = request.args.get('name')
     country = request.args.get('country')
 
-    cur['session'].execute(cur['teams'].insert().values(name=name, country=country))
+    cur['session'].execute(cur['teams'].insert().values(name=name, country=country, game_id=game_id))
     cur['session'].commit()
     return 'success', 200
