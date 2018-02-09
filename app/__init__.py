@@ -59,7 +59,8 @@ def get_games():
     res = [get_json(game, table['cols']) for game in data]
     return jsonify(games=res), 200
 
-@app.route('/games/<int:game_id>', method=['GET'])
+
+@app.route('/games/<int:game_id>', methods=['GET'])
 def get_game(game_id):
     table = games_s_1
     session = session_s_1
