@@ -98,8 +98,8 @@ def get_teams(game_id):
 def put_teams(game_id):
     cur = data[choose(game_id)]['m']
 
-    name = request.get_json()['name']
-    country = request.get_json()['country']
+    name = request.args.get('name')
+    country = request.args.get('country')
 
     cur['teams'].insert().values(name=name, country=country)
 
