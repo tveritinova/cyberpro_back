@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 import json
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import NoResultFound
 from secure_info import user, password, host, port, socket
 from collections import defaultdict
 
@@ -78,8 +79,10 @@ def get_games():
 @app.route('/games/<int:game_id>', methods=['GET'])
 def get_game(game_id):
     cur = data[0]['s']
-    print cur['session'].query(cur['games']).filter(cur['games'].c.id == game_id)
-    res_data = cur['session'].query(cur['games']).filter(cur['games'].c.id == game_id).one()
+    try:
+        res_data = cur['session'].query(cur['games']).filter(cur['games'].c.id == game_id).one()
+    except NoResultFound:
+        return 204
     return jsonify(get_json(res_data, get_cols(cur['session'], cur['games']))), 200
 
 
