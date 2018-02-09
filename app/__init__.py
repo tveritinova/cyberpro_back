@@ -3,6 +3,7 @@ import json
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from secure_info import user, password, host, port, socket
+from collections import defaultdict
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -30,9 +31,8 @@ games_s_1['table'] = Table('games', metadata_s_1, autoload=True)
 games_s_1['cols'] = [col['name'] for col in session_s_1.query(games_s_1['table']).column_descriptions]
 '''
 
-#sharding_dict = {}
 
-data = {}
+data = defaultdict(dict)
 
 for i in range(2):
     for r in ['m', 's']:
