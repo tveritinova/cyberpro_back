@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import json
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
@@ -30,6 +30,7 @@ games_m_1['cols'] = [col['name'] for col in session_m_1.query(games_m_1['table']
 games_s_1['table'] = Table('games', metadata_s_1, autoload=True)
 games_s_1['cols'] = [col['name'] for col in session_s_1.query(games_s_1['table']).column_descriptions]
 '''
+
 
 def nested_dict():
     return defaultdict(nested_dict)
@@ -87,3 +88,15 @@ def get_teams(game_id):
     res_data = cur['session'].query(cur['teams']).filter(cur['teams'].c.game_id == game_id).all()
     res_dict = [get_json(game, get_cols(cur['session'], cur['teams'])) for game in res_data]
     return jsonify(teams=res_dict), 200
+
+
+@app.route('/games/<int:game_id>/teams', methods=['POST'])
+def put_teams(game_id):
+    cur = data[choose(game_id)]['m']
+
+    name = request.get_json()['name']
+    country = request.get_json()['country']
+
+    cur['teams'].insert().values(name=name, country=country)
+
+    return 200
