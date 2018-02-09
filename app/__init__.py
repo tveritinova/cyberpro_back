@@ -41,13 +41,11 @@ for i in range(2):
         data[i][r]['metadata'] = MetaData(data[i][r]['engine'])
         data[i][r]['session'] = sessionmaker(bind=data[i][r]['engine'])
         data[i][r]['games'] = Table('games', data[i][r]['metadata'], autoload=True)
+        data[i][r]['teams'] = Table('teams', data[i][r]['metadata'], autoload=True)
 
 
 def choose(game_id):
-    if game_id % 2 == 0:
-        return 'db1'
-    else:
-        return 'db2'
+    return game_id % 2
 
 
 def get_cols(session, table):
@@ -77,5 +75,12 @@ def get_games():
 @app.route('/games/<int:game_id>', methods=['GET'])
 def get_game(game_id):
     cur = data[1]['s']
-    res_data = cur['session'].query(cur['table']).filter(cur['table'].c.id == game_id).one()
-    return jsonify(get_json(res_data, get_cols(cur['session'], cur['table']))), 200
+    res_data = cur['session'].query(cur['games']).filter(cur['games'].c.id == game_id).one()
+    return jsonify(get_json(res_data, get_cols(cur['session'], cur['games']))), 200
+
+@app.route('/games/<int:game_id>/teams', methods=['GET'])
+def get_teams(game_id):
+    cur = data[choose(game_id)]['s']
+    res_data = cur['session'].query(cur['teams']).filter(cur['teams'].c.game_id == game_id).all()
+    res_dict = [get_json(game, get_cols(cur['session'], cur['teams'])) for game in res_data]
+    return jsonify(teams=res_dict), 200
