@@ -91,8 +91,12 @@ def create():
                 "from games" \
                 "where id = "+game_id+ \
                 "limit 1"
+
         cur['engine'].execute(query)
-        return 'success', 201
+
+        res_data = cur['session'].query(cur['teams']).filter(cur['teams'].c.name == name).one()
+
+        return jsonify(get_json(res_data, get_cols(cur['session'],cur['teams']), cur['teams_exc'])), 201
 
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>', methods=['GET'])

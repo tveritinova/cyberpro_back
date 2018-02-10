@@ -32,17 +32,17 @@ class BackApiTestCase(unittest.TestCase):
         result = self.client().get('/games/6')
         self.assertEqual(result.status_code, 204)
 
-    '''
     def test_api_can_post_team(self):
         """Test API can edit an existing bucketlist. (PUT request)"""
         rv = self.client().post('/games/1/teams',data={'name': 'team1', 'country': 'russia'})
         self.assertEqual(rv.status_code, 201)
-        results = self.client().get('/games/1/teams/'+id)
-        self.assertIn('Dont just eat', str(results.data))
+        results = self.client().get('/games/1/teams/'+rv['id'])
+        self.assertEqual(results.status_codr, 200)
+        self.assertEqual(ast.literal_eval(results.data)['name'], 'team1')
+        self.assertEqual(ast.literal_eval(results.data)['country'], 'russia')
 
     def tearDown(self):
         """teardown all initialized variables."""
-    '''
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
