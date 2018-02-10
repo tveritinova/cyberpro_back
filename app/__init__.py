@@ -81,8 +81,8 @@ def create():
     @app.route('/games/<int:game_id>/teams', methods=['POST'])
     def post_teams(game_id):
         cur = data[choose(game_id)]['m']
-        
-        print request.data
+
+        raise Exception(request.data)
 
         name = request.data.get('name')
         country = request.data.get('country')
