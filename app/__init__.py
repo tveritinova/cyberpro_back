@@ -82,7 +82,7 @@ def create():
     def post_teams(game_id):
         cur = data[choose(game_id)]['m']
 
-        print game_id
+        raise Exception(game_id)
 
         name = request.args.get('name')
         country = request.args.get('country')
