@@ -85,9 +85,9 @@ def create():
         name = request.args.get('name')
         country = request.args.get('country')
 
-        #if game_id == None: raise Exception("game id none")
-        #if name == None: raise Exception("name id none")
-        #if country == None: raise Exception("country id none")
+        if game_id == None: raise Exception("game id none")
+        if name == None: raise Exception("name id none")
+        if country == None: raise Exception("country id none")
 
 
         query = "insert into teams (name, country, game_id)" +\
