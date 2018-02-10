@@ -89,7 +89,7 @@ def create():
         query = "insert into teams (name, country, game_id)" \
                 "select "+name+","+country+",id" \
                 "from games" \
-                "where id = "+game_id+ \
+                "where id = "+str(game_id)+ \
                 "limit 1"
 
         cur['engine'].execute(query)
