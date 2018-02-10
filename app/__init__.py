@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from secure_info import user, password, host, port, socket
 from collections import defaultdict
+import ast
 
 
 def nested_dict():
@@ -82,7 +83,7 @@ def create():
     def post_teams(game_id):
         cur = data[choose(game_id)]['m']
 
-        raise Exception(request.data)
+        raise Exception(ast.literal_eval(request.data))
 
         name = request.data.get('name')
         country = request.data.get('country')
