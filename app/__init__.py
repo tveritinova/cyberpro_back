@@ -85,6 +85,8 @@ def create():
         name = request.args.get('name')
         country = request.args.get('country')
 
+        raise Exception("123 " + str(game_id))
+
         query = "insert into teams (name, country, game_id)" +\
                 "select "+name+","+country+",id" +\
                 "from games" +\
