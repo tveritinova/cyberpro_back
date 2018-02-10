@@ -78,10 +78,11 @@ def create():
         res_dict = [get_json(game, get_cols(cur['session'], cur['teams']), cur['teams_exc']) for game in res_data]
         return jsonify(teams=res_dict), 200
 
-
     @app.route('/games/<int:game_id>/teams', methods=['POST'])
-    def put_teams(game_id):
+    def post_teams(game_id):
         cur = data[choose(game_id)]['m']
+
+        print game_id
 
         name = request.args.get('name')
         country = request.args.get('country')
