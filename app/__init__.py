@@ -19,10 +19,11 @@ def get_cols(session, table):
     return [col['name'] for col in session.query(table).column_descriptions]
 
 
-def get_json(tuple, cols):
+def get_json(tuple, cols, exc):
     res_dict = {}
     for i in range(len(cols)):
-        res_dict[cols[i]] = tuple[i]
+        if cols[i] not in exc:
+            res_dict[cols[i]] = tuple[i]
     return res_dict
 
 
@@ -43,7 +44,9 @@ def create():
             data[i][r]['metadata'] = MetaData(data[i][r]['engine'])
             data[i][r]['session'] = sessionmaker(bind=data[i][r]['engine'])()
             data[i][r]['games'] = Table('games', data[i][r]['metadata'], autoload=True)
+            data[i][r]['games_exc'] = ['img_path']
             data[i][r]['teams'] = Table('teams', data[i][r]['metadata'], autoload=True)
+            data[i][r]['teams_exc'] = ['img_path']
 
     @app.route('/')
     def root():
@@ -54,7 +57,7 @@ def create():
     def get_games():
         cur = data[0]['s']
         res_data = cur['session'].query(cur['games']).all()
-        res_dict = [get_json(game, get_cols(cur['session'],cur['games'])) for game in res_data]
+        res_dict = [get_json(game, get_cols(cur['session'],cur['games']),cur['games_exc']) for game in res_data]
         return jsonify(games=res_dict), 200
 
 
@@ -65,14 +68,14 @@ def create():
             res_data = cur['session'].query(cur['games']).filter(cur['games'].c.id == game_id).one()
         except NoResultFound:
             return '', 204
-        return jsonify(get_json(res_data, get_cols(cur['session'], cur['games']))), 200
+        return jsonify(get_json(res_data, get_cols(cur['session'], cur['games']), cur['games_exc'])), 200
 
 
     @app.route('/games/<int:game_id>/teams', methods=['GET'])
     def get_teams(game_id):
         cur = data[choose(game_id)]['s']
         res_data = cur['session'].query(cur['teams']).filter(cur['teams'].c.game_id == game_id).all()
-        res_dict = [get_json(game, get_cols(cur['session'], cur['teams'])) for game in res_data]
+        res_dict = [get_json(game, get_cols(cur['session'], cur['teams']), cur['teams_exc']) for game in res_data]
         return jsonify(teams=res_dict), 200
 
 
@@ -101,6 +104,6 @@ def create():
         except NoResultFound:
             return '', 204
 
-        return jsonify(get_json(res_data, get_cols(cur['session'], cur['teams']))), 200
+        return jsonify(get_json(res_data, get_cols(cur['session'], cur['teams']), cur['teams_exc'])), 200
 
     return app
