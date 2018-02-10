@@ -1,7 +1,6 @@
 import unittest
-import os
-import json
 from app import create
+import ast
 
 class BackApiTestCase(unittest.TestCase):
     """This class represents the bucketlist test case"""
@@ -20,13 +19,14 @@ class BackApiTestCase(unittest.TestCase):
         """Test API can get a bucketlist (GET request)."""
         res = self.client().get('/games')
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.data, self.games)
+        self.assertEqual(ast.literal_eval(res.data)['games'], self.games)
 
     def test_api_can_get_game_by_id(self):
         """Test API can get a single bucketlist by using it's id."""
         result = self.client().get('/games/1')
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.data['name'], 'dota2')
+        self.assertEqual(ast.literal_eval(result.data)['id'], 1)
+        self.assertEqual(ast.literal_eval(result.data)['name'], 'dota2')
         result = self.client().get('/games/0')
         self.assertEqual(result.status_code, 204)
         result = self.client().get('/games/6')
