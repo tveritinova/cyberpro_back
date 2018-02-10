@@ -18,7 +18,7 @@ class BackApiTestCase(unittest.TestCase):
 
     def test_api_can_get_all_games(self):
         """Test API can get a bucketlist (GET request)."""
-        res = self.client().get('/games/')
+        res = self.client().get('/games')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data, self.games)
 
@@ -26,7 +26,7 @@ class BackApiTestCase(unittest.TestCase):
         """Test API can get a single bucketlist by using it's id."""
         result = self.client().get('/games/1')
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(str(result.data), 'dota2')
+        self.assertEqual(result.data['name'], 'dota2')
         result = self.client().get('/games/0')
         self.assertEqual(result.status_code, 204)
         result = self.client().get('/games/6')
