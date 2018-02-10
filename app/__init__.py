@@ -92,7 +92,7 @@ def create():
         return 'success', 201
 
 
-    @app.route('games/<int:game_id>/teams/<int:team_id>', methods=['GET'])
+    @app.route('/games/<int:game_id>/teams/<int:team_id>', methods=['GET'])
     def get_team(game_id, team_id):
         cur = data[choose(game_id)]['s']
 
