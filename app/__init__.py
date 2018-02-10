@@ -85,13 +85,10 @@ def create():
         name = request.args.get('name')
         country = request.args.get('country')
 
-        raise Exception("123 " + str(game_id))
-
         query = "insert into teams (name, country, game_id)" +\
                 "select "+name+","+country+",id" +\
                 "from games" +\
-                "where id = "+str(game_id) +\
-                "limit 1"
+                "where id = "+str(game_id) + "limit 1"
 
         cur['engine'].execute(query)
 
