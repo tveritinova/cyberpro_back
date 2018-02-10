@@ -83,9 +83,9 @@ def create():
     def post_teams(game_id):
         cur = data[choose(game_id)]['m']
 
-        raise Exception(ast.literal_eval(request.data))
+        raise request.data
 
-        name = request.data.get('name')
+        name = request.get_data().get('name')
         country = request.data.get('country')
 
         if game_id == None: raise Exception("game id none")
