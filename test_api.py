@@ -1,6 +1,8 @@
 import unittest
 from app import create
 import ast
+import json
+
 
 class BackApiTestCase(unittest.TestCase):
     """This class represents the bucketlist test case"""
@@ -34,15 +36,17 @@ class BackApiTestCase(unittest.TestCase):
 
     def test_api_can_post_team(self):
         """Test API can edit an existing bucketlist. (PUT request)"""
+        data_to_put = {'name': 'team1', 'country': 'russia'}
         rv = self.client().post('/games/1/teams',
-                                data={'name': 'team1', 'country': 'russia'},
-                                content_type='application/json')
+                                data=json.dumps(data_to_put),
+                                content_type='application/json',
+                                accept='application/json')
 
         self.assertEqual(rv.status_code, 201)
         results = self.client().get('/games/1/teams/'+rv['id'])
         self.assertEqual(results.status_codr, 200)
-        self.assertEqual(ast.literal_eval(results.data)['name'], 'team1')
-        self.assertEqual(ast.literal_eval(results.data)['country'], 'russia')
+        self.assertEqual(ast.literal_eval(results.data)['name'], data_to_put['name'])
+        self.assertEqual(ast.literal_eval(results.data)['country'], data_to_put['country'])
 
     def tearDown(self):
         """teardown all initialized variables."""
