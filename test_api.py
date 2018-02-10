@@ -34,7 +34,10 @@ class BackApiTestCase(unittest.TestCase):
 
     def test_api_can_post_team(self):
         """Test API can edit an existing bucketlist. (PUT request)"""
-        rv = self.client().post('/games/1/teams',data={'name': 'team1', 'country': 'russia'})
+        rv = self.client().post('/games/1/teams',
+                                data={'name': 'team1', 'country': 'russia'},
+                                content_type='application/json')
+
         self.assertEqual(rv.status_code, 201)
         results = self.client().get('/games/1/teams/'+rv['id'])
         self.assertEqual(results.status_codr, 200)
