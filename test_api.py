@@ -39,8 +39,8 @@ class BackApiTestCase(unittest.TestCase):
         data_to_put = {'name': 'team1', 'country': 'russia'}
         rv = self.client().post('/games/1/teams',
                                 data=json.dumps(data_to_put),
-                                content_type='application/json',
-                                accept='application/json')
+                                headers={'Content-Type':'application/json',
+                                         'Accept':'application/json'})
 
         self.assertEqual(rv.status_code, 201)
         results = self.client().get('/games/1/teams/'+rv['id'])
