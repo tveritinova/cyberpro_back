@@ -12,7 +12,7 @@ class BackApiTestCase(unittest.TestCase):
         self.games = [{'name': 'dota2', 'id': 1},
                       {'name': 'cs-go', 'id': 2},
                       {'name': 'lol', 'id': 3},
-                      {'name': 'heartstone', 'id': 4},
+                      {'name': 'hearthstone', 'id': 4},
                       {'name': 'overwatch', 'id': 5}]
 
     def test_api_can_get_all_games(self):
