@@ -57,8 +57,8 @@ def create(testing=False, debug=False):
     @app.route('/games', methods=['GET'])
     def get_games():
         cur = data[0]['s' if not testing else 'm']
-        class_ = cur['base'].classes.games
-        res_data = class_.query.all()
+        games = cur['base'].classes.games
+        res_data = cur['session'].query(games).all()
         res_dict = [get_json(game, exc_img_path) for game in res_data]
         return jsonify(games=res_dict), 200
 
