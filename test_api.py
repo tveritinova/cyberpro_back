@@ -140,7 +140,7 @@ class BackApiTestCase(unittest.TestCase):
         """Test API can get all tournaments and one by id. (GET request)"""
         tournament = {'name': 'test tournament', 'start_date': datetime.date(2018, 2, 11),
                       'end_date': datetime.date(2018, 2, 12)}
-        result = self.client().post('/tournaments', data=json.dump(tournament), headers=self.headers_to_post)
+        result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
 
@@ -168,7 +168,7 @@ class BackApiTestCase(unittest.TestCase):
         second_team_id = ast.literal_eval(result.data)['id']
         tournament = {'name': 'test tournament', 'start_date': datetime.date(2018, 2, 11),
                       'end_date': datetime.date(2018, 2, 12)}
-        result = self.client().post('/tournaments', data=json.dump(tournament), headers=self.headers_to_post)
+        result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
         match = {'num_in_stage': 1, 'date': datetime.datetime(2018, 2, 11, 11), 'tournament_id': tournament_id,
@@ -212,7 +212,7 @@ class BackApiTestCase(unittest.TestCase):
         transaction = {'date': datetime.date(2018, 2, 12), 'player_id': player_id,
                        'from_team_id': from_team_id, 'to_team_id': to_team_id}
 
-        result = self.client().post('/transactions', data=json.dump(transaction), header=self.headers_to_post)
+        result = self.client().post('/transactions', data=json.dumps(transaction), header=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         self.transaction_id = ast.literal_eval(result.data)['id']
 
@@ -235,7 +235,7 @@ class BackApiTestCase(unittest.TestCase):
     def test_team_in_tournament(self):
         tournament = {'name': 'test tournament', 'start_date': datetime.date(2018, 2, 11),
                       'end_date': datetime.date(2018, 2, 12)}
-        result = self.client().post('/tournaments', data=json.dump(tournament), headers=self.headers_to_post)
+        result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
 
