@@ -190,7 +190,7 @@ class BackApiTestCase(unittest.TestCase):
 
         player = {'name': 'Test Player', 'nickname': 'test_player',
                   'country': 'China', 'is_cap': False}
-        result = self.client().post('/games/1/teams/'+from_team_id+'/players',
+        result = self.client().post('/games/1/teams/'+str(from_team_id)+'/players',
                                     data=json.dumps(player), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 200)
         player_id = ast.literal_eval(result.data)['id']
@@ -203,7 +203,7 @@ class BackApiTestCase(unittest.TestCase):
         self.transaction_id = ast.literal_eval(result.data)['id']
 
         # check player's team changed
-        result.self.client().get('/games/1/teams/'+to_team_id+'/players/'+player_id)
+        result.self.client().get('/games/1/teams/'+str(to_team_id)+'/players/'+player_id)
         self.assertEqual(result.status_code, 200)
 
         result = self.client().get('/transactions/'+str(self.transaction_id))
