@@ -5,7 +5,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from secure_info import user, password, host, port, socket
 from collections import defaultdict
 import ast
@@ -113,10 +113,11 @@ def create(testing=False, debug=False):
         teams = cur['base'].classes.teams
 
         try:
-            res_data = cur['session'].query(teams).filter(teams.id == team_id).one()
+            res_data = cur['session'].query(teams).get(team_id)
         except NoResultFound:
             return '', 204
-
+        except InvalidRequestError:
+            return '', 205
         return jsonify(get_json(res_data, exc_img_path)), 200
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['GET'])
