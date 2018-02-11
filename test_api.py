@@ -71,7 +71,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(rv.status_code, 400)
 
         result = self.client().get('/games/1/teams/'+str(team_id+1))
-        self.assertEqual(result.status_code, 404)
+        self.assertEqual(result.status_code, 204)
 
     def test_api_can_post_and_get_player(self):
         """Test API can post player by team. (GET request)"""
@@ -184,12 +184,12 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         player_id = ast.literal_eval(result.data)['id']
 
-        first_team = {'name': 'team5', 'country': 'russia'}
+        first_team = {'name': 'team7', 'country': 'russia'}
         result = self.client().post('/games/1/teams', data=json.dumps(first_team), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         from_team_id = ast.literal_eval(result.data)['id']
 
-        second_team = {'name': 'team6', 'country': 'russia'}
+        second_team = {'name': 'team8', 'country': 'russia'}
         result = self.client().post('/games/1/teams', data=json.dumps(second_team), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         to_team_id = ast.literal_eval(result.data)['id']
@@ -220,7 +220,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
 
-        team = {'name': 'team4', 'country': 'russia'}
+        team = {'name': 'team9', 'country': 'russia'}
         result = self.client().post('/games/1/teams', data=json.dumps(team), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         team_id = ast.literal_eval(result.data)['id']
