@@ -86,6 +86,7 @@ def create(testing=False, debug=False):
 
     @app.route('/games/<int:game_id>/teams', methods=['POST'])
     def post_teams(game_id):
+        raise Exception("here")
         cur = data[choose(game_id)]['m']
 
         name = ast.literal_eval(request.data).get('name')
