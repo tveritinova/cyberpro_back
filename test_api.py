@@ -94,7 +94,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(data['country'], player['country'])
         self.assertEqual(data['id'], player_id)
 
-        rv = self.client().post('/games/1/teams/'+team_id+'/players', data=json.dumps(player),
+        rv = self.client().post('/games/1/teams/'+str(team_id)+'/players', data=json.dumps(player),
                                 headers=self.headers_to_post)
         self.assertEqual(rv.status_code, 400)
 
