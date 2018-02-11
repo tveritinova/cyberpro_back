@@ -338,7 +338,7 @@ def create(testing=False, debug=False):
 
         return '', 201
 
-    @app.route('games/<int:game_id>/tournaments/<int:tournament_id>/teams', methods=['GET'])
+    @app.route('/games/<int:game_id>/tournaments/<int:tournament_id>/teams', methods=['GET'])
     def get_teams_for_tournament(game_id, tournament_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournament_command = cur['base'].classes.tournament_command
@@ -348,7 +348,7 @@ def create(testing=False, debug=False):
 
         return jsonify(teams=[get_json(ins) for ins in res_data]), 200
 
-    @app.route('games/<int:game_id>/teams/<int:team_id>/tournaments', methods=['GET'])
+    @app.route('/games/<int:game_id>/teams/<int:team_id>/tournaments', methods=['GET'])
     def get_tournaments_for_team(game_id, team_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournament_command = cur['base'].classes.tournament_command
