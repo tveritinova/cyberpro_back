@@ -76,7 +76,7 @@ def create(testing=False, debug=False):
     def get_teams(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         teams = cur['base'].classes.teams
-        res_data = cur['session'].query(teams).get(game_id)
+        res_data = cur['session'].query(teams).filter(teams.game_id == game_id).one()
         res_dict = [get_json(game, exc_img_path) for game in res_data]
         return jsonify(teams=res_dict), 200
 
@@ -116,8 +116,7 @@ def create(testing=False, debug=False):
             res_data = cur['session'].query(teams).filter(teams.id == team_id).one()
         except NoResultFound:
             return '', 204
-        except InvalidRequestError:
-            return '', 205 #### FOR TEST!!!!
+
         return jsonify(get_json(res_data, exc_img_path)), 200
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['GET'])
