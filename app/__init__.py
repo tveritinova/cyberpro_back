@@ -45,13 +45,7 @@ def create(testing=False, debug=False):
         for r in ['m', 's']:
             data[i][r]['engine'] = create_engine('mysql://'+user+':'+password+'@'+host[i][r]+':'+port[i][r] +
                                                  '/db'+str(i+1)+'?unix_socket='+socket[i][r])
-            #data[i][r]['metadata'] = MetaData(data[i][r]['engine'])
             data[i][r]['session'] = sessionmaker(bind=data[i][r]['engine'])()
-            #data[i][r]['games'] = Table('games', data[i][r]['metadata'], autoload=True)
-            #data[i][r]['games_exc'] = ['img_path']
-            #data[i][r]['teams'] = Table('teams', data[i][r]['metadata'], autoload=True)
-            #data[i][r]['teams_exc'] = ['img_path']
-
             data[i][r]['base'] = automap_base()
             data[i][r]['base'].prepare(data[i][r]['engine'], reflect=True)
 
