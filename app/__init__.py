@@ -23,7 +23,7 @@ def get_json(instance):
     res_dict = {}
     cols = instance.__class__.__table__.c.keys()
     for i in range(len(cols)):
-        if getattr(instance, cols[i]) != "null":
+        if getattr(instance, cols[i]) is null:
             res_dict[cols[i]] = getattr(instance, cols[i])
             if type(res_dict[cols[i]]) is bool:
                 res_dict[cols[i]] = int(res_dict[cols[i]])
@@ -139,7 +139,7 @@ def create(testing=False, debug=False):
         country = ast.literal_eval(request.data).get('country')
         is_cap = ast.literal_eval(request.data).get('is_cap')
 
-        if not name or not nickname or not country or is_cap == None:
+        if not name or not nickname or not country or is_cap is None:
             return 'Missed data', 400
 
         cur['session'].add(players(name=name, nickname=nickname, country=country, is_cap=is_cap, team_id=team_id))
