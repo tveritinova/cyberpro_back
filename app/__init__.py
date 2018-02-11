@@ -165,7 +165,7 @@ def create(testing=False, debug=False):
         res_data = cur['session'].query(players).filter(players.id == player_id).one()
         return jsonify(get_json(res_data)), 200
 
-    @app.route('/game/<int:game_id>/tournaments', methods=['GET'])
+    @app.route('/games/<int:game_id>/tournaments', methods=['GET'])
     def get_tournaments(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournaments = cur['base'].classes.tournaments
@@ -173,7 +173,7 @@ def create(testing=False, debug=False):
         res_dict = [get_json(tournament) for tournament in res_data]
         return jsonify(tournaments=res_dict), 200
 
-    @app.route('/game/<int:game_id>/tournaments', methods=['POST'])
+    @app.route('/games/<int:game_id>/tournaments', methods=['POST'])
     def post_tournaments(game_id):
         cur = data[choose(game_id)]['m']
         tournaments = cur['base'].classes.tournaments
@@ -202,14 +202,14 @@ def create(testing=False, debug=False):
 
         return jsonify(get_json(res_data)), 201
 
-    @app.route('/game/<int:game_id>/tournaments/<int:tournament_id>', methods=['GET'])
+    @app.route('/games/<int:game_id>/tournaments/<int:tournament_id>', methods=['GET'])
     def get_tournament(game_id, tournament_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournaments = cur['base'].classes.tournaments
         res_data = cur['session'].query(tournaments).filter(tournaments.id == tournament_id).one()
         return jsonify(get_json(res_data)), 200
 
-    @app.route('/game/<int:game_id>/matches', methods=['GET'])
+    @app.route('/games/<int:game_id>/matches', methods=['GET'])
     def get_matches(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         matches = cur['base'].classes.matches
@@ -217,7 +217,7 @@ def create(testing=False, debug=False):
         res_dict = [get_json(match) for match in res_data]
         return jsonify(matches=res_dict), 200
 
-    @app.route('/game/<int:game_id>/matches', methods=['POST'])
+    @app.route('/games/<int:game_id>/matches', methods=['POST'])
     def post_match(game_id):
         cur = data[choose(game_id)]['m']
         matches = cur['base'].classes.matches
@@ -251,14 +251,14 @@ def create(testing=False, debug=False):
 
         return jsonify(get_json(res_data)), 201
 
-    @app.route('/game/<int:game_id>/matches/<int:match_id>', methods=['GET'])
+    @app.route('/games/<int:game_id>/matches/<int:match_id>', methods=['GET'])
     def get_match(game_id, match_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         matches = cur['base'].classes.matches
         res_data = cur['session'].query(matches).filter(matches.id == match_id).one()
         return jsonify(get_json(res_data)), 200
 
-    @app.route('/game/<int:game_id>/tournaments/<int:tournament_id>/matches', methods=['GET'])
+    @app.route('/games/<int:game_id>/tournaments/<int:tournament_id>/matches', methods=['GET'])
     def get_match_for_tournament(game_id, tournament_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         matches = cur['base'].classes.matches
