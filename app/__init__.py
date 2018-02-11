@@ -116,6 +116,8 @@ def create(testing=False, debug=False):
             res_data = cur['session'].query(teams).filter(teams.id == team_id).one()
         except NoResultFound:
             return '', 204
+        except InvalidRequestError:
+            return '', 204
 
         return jsonify(get_json(res_data, exc_img_path)), 200
 
