@@ -25,6 +25,8 @@ def get_json(instance, exc):
     for i in range(len(cols)):
         if cols[i] not in exc:
             res_dict[cols[i]] = getattr(instance, cols[i])
+        if type(res_dict[cols[i]]) is bool:
+            res_dict[cols[i]] = int(res_dict[cols[i]])
     return res_dict
 
 
@@ -133,7 +135,6 @@ def create(testing=False, debug=False):
     def post_players(game_id, team_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         players = cur['base'].classes.players
-
 
         name = ast.literal_eval(request.data).get('name')
         nickname = ast.literal_eval(request.data).get('nickname')
