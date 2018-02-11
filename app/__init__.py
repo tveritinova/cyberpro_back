@@ -306,4 +306,11 @@ def create(testing=False, debug=False):
 
         return jsonify(get_json(res_data)), 201
 
+    @app.route('/games/<int:game_id>/transactions/<int:transaction_id>', methods=['GET'])
+    def get_transaction(game_id, transaction_id):
+        cur = data[choose(game_id)]['m']
+        transactions = cur['base'].classes.players_transactions
+        res_data = cur['session'].query(transactions).filter(transactions.id == transaction_id).one()
+        return jsonify(get_json(res_data)), 200
+
     return app
