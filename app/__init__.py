@@ -36,7 +36,8 @@ def get_json(instance):
 
 
 def create(testing=False, debug=False):
-    app = Flask(__name__, static_folder="../cyberpro_front/static/dist", template_folder="../cyberpro_front/static")
+    app = Flask(__name__, static_folder="../../cyberpro_front/static/dist",
+                template_folder="../../cyberpro_front/static")
     app.config['DEBUG'] = debug
 
     crashed_master = None
