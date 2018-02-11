@@ -24,6 +24,7 @@ class BackApiTestCase(unittest.TestCase):
         """Test API can get games. (GET request)"""
         res = self.client().get('/games')
         self.assertEqual(res.status_code, 200)
+        self.assertEqual(list(ast.literal_eval(res.data).keys()), ['games'])
         self.assertEqual(ast.literal_eval(res.data)['games'], self.games)
 
     def test_api_can_get_game(self):
@@ -52,6 +53,7 @@ class BackApiTestCase(unittest.TestCase):
         """Test API can get all teams. (GET request)"""
         result = self.client().get('/games/1/teams')
         self.assertEqual(result.status_code, 200)
+        self.assertEqual(list(ast.literal_eval(result.data).keys()), ['teams'])
 
     def test_api_can_post_team(self):
         """Test API can add a team. (POST request)"""
@@ -105,9 +107,11 @@ class BackApiTestCase(unittest.TestCase):
         team = {'name': 'team10', 'country': 'russia'}
         result = self.client().post('/games/1/teams', data=json.dumps(team), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
+
         team_id = ast.literal_eval(result.data)['id']
         result = self.client().get('/games/1/teams/'+str(team_id)+'/players')
         self.assertEqual(result.status_code, 200)
+        self.assertEqual(list(ast.literal_eval(result.data).keys()), ['players'])
 
     def test_api_can_get_player(self):
         """Test API can get a player by team. (GET request)"""
@@ -151,6 +155,7 @@ class BackApiTestCase(unittest.TestCase):
     def test_api_can_get_tournaments(self):
         result = self.client().get('/tournaments')
         self.assertEqual(result.status_code, 200)
+        self.assertEqual(list(ast.literal_eval(result.data).keys()), ['tournaments'])
 
     def test_matches(self):
         first_team = {'name': 'team5', 'country': 'russia'}
@@ -174,6 +179,7 @@ class BackApiTestCase(unittest.TestCase):
 
         result = self.client().get('/matches')
         self.assertEqual(result.status_code, 200)
+        self.assertEqual(list(ast.literal_eval(result.data).keys()), ['matches'])
 
         result = self.client().get('/matches/' + str(self.match_id))
         self.assertEqual(result.status_code, 200)
