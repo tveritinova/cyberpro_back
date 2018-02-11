@@ -193,7 +193,7 @@ class BackApiTestCase(unittest.TestCase):
 
         result = self.client().get('/games/1/tournaments/'+str(tournament_id)+'/matches')
         self.assertEqual(result.status_code, 200)
-        self.assertIn(ast.literal_eval(result.data), match)
+        self.assertIn(ast.literal_eval(result.data)['matches'], match)
 
     def test_players_transactions(self):
         first_team = {'name': 'team7', 'country': 'russia'}
@@ -221,7 +221,7 @@ class BackApiTestCase(unittest.TestCase):
         transaction_id = ast.literal_eval(result.data)['id']
 
         # check player's team changed
-        result.self.client().get('/games/1/teams/'+str(to_team_id)+'/players/'+player_id)
+        result = self.client().get('/games/1/teams/'+str(to_team_id)+'/players/'+player_id)
         self.assertEqual(result.status_code, 200)
 
         result = self.client().get('games/1/transactions/'+str(transaction_id))
@@ -233,7 +233,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(data['date'], transaction['date'])
 
     def test_api_can_get_transactions(self):
-        result = self.client().get('/transactions')
+        result = self.client().get('games/1/transactions')
         self.assertEqual(result.status_code, 200)
 
     def test_team_in_tournament(self):
