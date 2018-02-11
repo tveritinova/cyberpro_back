@@ -117,7 +117,7 @@ def create(testing=False, debug=False):
         except NoResultFound:
             return '', 204
         except InvalidRequestError:
-            return '', 205
+            return '', 205 #### FOR TEST!!!!
         return jsonify(get_json(res_data, exc_img_path)), 200
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['GET'])

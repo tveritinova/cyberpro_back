@@ -178,12 +178,6 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(data['date'], str(match['date']))
 
     def test_players_transactions(self):
-        player = {'name': 'Test Player', 'nickname': 'test_player',
-                  'country': 'China', 'is_cap': False, 'team_id': team_id}
-        result = self.client().post('/games/1/teams/1/players', data=json.dumps(player), headers=self.headers_to_post)
-        self.assertEqual(result.status_code, 200)
-        player_id = ast.literal_eval(result.data)['id']
-
         first_team = {'name': 'team7', 'country': 'russia'}
         result = self.client().post('/games/1/teams', data=json.dumps(first_team), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
@@ -194,12 +188,23 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 201)
         to_team_id = ast.literal_eval(result.data)['id']
 
+        player = {'name': 'Test Player', 'nickname': 'test_player',
+                  'country': 'China', 'is_cap': False}
+        result = self.client().post('/games/1/teams/'+from_team_id+'/players',
+                                    data=json.dumps(player), headers=self.headers_to_post)
+        self.assertEqual(result.status_code, 200)
+        player_id = ast.literal_eval(result.data)['id']
+
         transaction = {'date': datetime.date(2018, 2, 12), 'player_id': player_id,
                        'from_team_id': from_team_id, 'to_team_id': to_team_id}
 
         result = self.client().post('/transactions', data=transaction, header=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         self.transaction_id = ast.literal_eval(result.data)['id']
+
+        # check player's team changed
+        result.self.client().get('/games/1/teams/'+to_team_id+'/players/'+player_id)
+        self.assertEqual(result.status_code, 200)
 
         result = self.client().get('/transactions/'+str(self.transaction_id))
         self.assertEqual(result.status_code, 200)
