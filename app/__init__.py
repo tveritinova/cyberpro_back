@@ -23,7 +23,7 @@ def get_json(instance):
     res_dict = {}
     cols = instance.__class__.__table__.c.keys()
     for i in range(len(cols)):
-        if cols[i] != null:
+        if getattr(instance, cols[i]) != null:
             res_dict[cols[i]] = getattr(instance, cols[i])
             if type(res_dict[cols[i]]) is bool:
                 res_dict[cols[i]] = int(res_dict[cols[i]])
