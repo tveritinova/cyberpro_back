@@ -21,7 +21,7 @@ def choose(game_id):
 
 def get_json(instance, exc):
     res_dict = {}
-    cols = instance.__class__.keys()
+    cols = instance.__class__.columns.keys()
     for i in range(len(cols)):
         if cols[i] not in exc:
             res_dict[cols[i]] = getattr(instance, cols[i])
