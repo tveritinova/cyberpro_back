@@ -67,7 +67,7 @@ def create(testing=False, debug=False):
         cur = data[0]['s' if not testing else 'm']
         games = cur['base'].classes.games
         try:
-            res_data = games.query.get(game_id)
+            res_data = cur['session'].query(games).get(game_id)
         except NoResultFound:
             return '', 204
         return jsonify(get_json(res_data, exc_img_path)), 200
@@ -76,7 +76,7 @@ def create(testing=False, debug=False):
     def get_teams(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         teams = cur['base'].classes.teams
-        res_data = teams.query.filter(teams.game_id == game_id).all()
+        res_data = cur['session'].query(teams).filter(teams.game_id == game_id).all()
         res_dict = [get_json(game, exc_img_path) for game in res_data]
         return jsonify(teams=res_dict), 200
 
