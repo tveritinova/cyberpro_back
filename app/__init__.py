@@ -134,7 +134,7 @@ def create(testing=False, debug=False):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         players = cur['base'].classes.players
 
-        #raise Exception(request.data)
+        raise Exception(request.data)
         name = ast.literal_eval(request.data).get('name')
         nickname = ast.literal_eval(request.data).get('nickname')
         country = ast.literal_eval(request.data).get('country')
