@@ -5,6 +5,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.exc import IntegrityError
 from secure_info import user, password, host, port, socket
 from collections import defaultdict
 import ast
@@ -88,18 +89,10 @@ def create(testing=False, debug=False):
         name = ast.literal_eval(request.data).get('name')
         country = ast.literal_eval(request.data).get('country')
 
-        if game_id == None: raise Exception("game id none")
-        if name == None: raise Exception("name id none")
-        if country == None: raise Exception("country id none")
-
-
-        #query = "insert into teams (name, country, game_id) " +\
-        #        "select \'"+name+"\',\'"+country+"\',id " +\
-        #        "from games where id = "+str(game_id)+" limit 1"
-        #cur['engine'].execute(query)
+        if not name or not country:
+            return 'Missed name, country data', 400
 
         base = cur['base']
-        #game = cur['session'].query(base.classes.games).get(game_id)
         cur['session'].add(base.classes.teams(name=name, country=country, game_id=game_id))
 
         # catch failed unique cons
@@ -107,7 +100,11 @@ def create(testing=False, debug=False):
         if testing:
             cur['session'].flush()
         else:
-            cur['session'].commit()
+            try:
+                cur['session'].commit()
+            except IntegrityError as e:
+                if e.orig[0] == 1062:
+                    return 'Name unique constraint failed', 400
 
         res_data = cur['session'].query(cur['teams']).filter(cur['teams'].c.name == name).one()
 
