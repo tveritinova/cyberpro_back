@@ -179,6 +179,7 @@ def create(testing=False, debug=False):
         cur = data[0]['s' if not testing else 'm']
         tournaments = cur['base'].classes.tournaments
 
+        raise Exception(request.data)
         name = ast.literal_eval(request.data).get('name')
         start_date = ast.literal_eval(request.data).get('start_date')
         end_date = ast.literal_eval(request.data).get('start_date')
