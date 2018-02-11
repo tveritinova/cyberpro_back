@@ -98,7 +98,7 @@ class BackApiTestCase(unittest.TestCase):
                                 headers=self.headers_to_post)
         self.assertEqual(rv.status_code, 400)
 
-        result = self.client().get('/games/1/teams/'+str(ast.literal_eval(rv.data)['id']+1))
+        result = self.client().get('/games/1/teams/'+str(team_id+1))
         self.assertEqual(result.status_code, 404)
 
     def test_api_can_get_players(self):
