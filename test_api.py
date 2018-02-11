@@ -221,7 +221,7 @@ class BackApiTestCase(unittest.TestCase):
         transaction_id = ast.literal_eval(result.data)['id']
 
         # check player's team changed
-        result = self.client().get('/games/1/teams/'+str(to_team_id)+'/players/'+player_id)
+        result = self.client().get('/games/1/teams/'+str(to_team_id)+'/players/'+str(player_id))
         self.assertEqual(result.status_code, 200)
 
         result = self.client().get('games/1/transactions/'+str(transaction_id))
