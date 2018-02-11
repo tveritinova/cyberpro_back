@@ -191,7 +191,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(data['num_in_stage'], match['num_in_stage'])
         self.assertEqual(data['date'], str(match['date']))
 
-        result = self.client().get('/games/1/tournaments/'+tournament_id+'/matches')
+        result = self.client().get('/games/1/tournaments/'+str(tournament_id)+'/matches')
         self.assertEqual(result.status_code, 200)
         self.assertIn(ast.literal_eval(result.data), match)
 

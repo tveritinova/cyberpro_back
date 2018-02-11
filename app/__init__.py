@@ -288,7 +288,7 @@ def create(testing=False, debug=False):
 
         cur['session'].add(transactions(player_id=player_id, from_team_id=from_team_id,
                                         to_team_id=to_team_id, date=date))
-        cur['session'].query(players).update().where(players.id == player_id).values(team_id=to_team_id)
+        cur['session'].query(players).filter(players.id == player_id).update({'team_id': to_team_id})
 
         try:
             if testing:
