@@ -109,6 +109,7 @@ class BackApiTestCase(unittest.TestCase):
         team = {'name': 'team4', 'country': 'russia'}
         result = self.client().post('/games/1/teams', data=json.dumps(team), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
+        self.assertEqual(result.data, '124')
         team_id = ast.literal_eval(result.data)['id']
 
         player = {'name': 'Test Player', 'nickname': 'test_player',
