@@ -138,10 +138,10 @@ def create(testing=False, debug=False):
         name = ast.literal_eval(request.data).get('name')
         nickname = ast.literal_eval(request.data).get('nickname')
         country = ast.literal_eval(request.data).get('country')
-        is_cap = bool(ast.literal_eval(request.data).get('is_cap'))
+        is_cap = ast.literal_eval(request.data).get('is_cap')
 
         if not name or not nickname or not country or not is_cap:
-            return 'Missed data', 400
+            return 'Missed data', 410
 
         cur['session'].add(players(name=name, nickname=nickname, country=country, is_cap=is_cap, team_id=team_id))
 
