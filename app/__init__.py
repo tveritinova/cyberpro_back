@@ -101,6 +101,8 @@ def create(testing=False, debug=False):
         #        "from games where id = "+str(game_id)+" limit 1"
         #cur['engine'].execute(query)
 
+        raise Exception("here")
+
         base = cur['base']
         game = cur['session'].query(base.classes.games).get(game_id)
         cur['session'].add(base.classes.teams(name=name, country=country, game_id=game))
