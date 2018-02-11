@@ -180,7 +180,7 @@ def create(testing=False, debug=False):
 
         name = ast.literal_eval(request.data).get('name')
         start_date = ast.literal_eval(request.data).get('start_date')
-        end_date = ast.literal_eval(request.data).get('start_date')
+        end_date = ast.literal_eval(request.data).get('end_date')
 
         if name is None or start_date is None or end_date is None:
             return 'Missed data', 400
