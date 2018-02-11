@@ -99,7 +99,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(rv.status_code, 400)
 
         result = self.client().get('/games/1/teams/'+str(team_id+1))
-        self.assertEqual(result.status_code, 404)
+        self.assertEqual(result.status_code, 204)
 
     def test_api_can_get_players(self):
         team = {'name': 'team10', 'country': 'russia'}
