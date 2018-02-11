@@ -171,7 +171,7 @@ def create(testing=False, debug=False):
         cur = data[0]['s' if not testing else 'm']
         tournaments = cur['base'].classes.tournaments
         res_data = cur['session'].query(tournaments).all()
-        res_dict = [get_json(tournaments) for tournament in res_data]
+        res_dict = [get_json(tournament) for tournament in res_data]
         return jsonify(games=res_dict), 200
 
     return app
