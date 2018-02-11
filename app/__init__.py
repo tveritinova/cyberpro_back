@@ -19,11 +19,11 @@ def choose(game_id):
     return game_id % 2
 
 
-def get_json(instance, exc):
+def get_json(instance):
     res_dict = {}
     cols = instance.__class__.__table__.c.keys()
     for i in range(len(cols)):
-        if cols[i] not in exc:
+        if cols[i] != null:
             res_dict[cols[i]] = getattr(instance, cols[i])
             if type(res_dict[cols[i]]) is bool:
                 res_dict[cols[i]] = int(res_dict[cols[i]])
@@ -50,8 +50,6 @@ def create(testing=False, debug=False):
             data[i][r]['base'] = automap_base()
             data[i][r]['base'].prepare(data[i][r]['engine'], reflect=True)
 
-    exc_img_path = ['img_path']
-
     @app.route('/')
     def root():
         return 'Welcome to cyber.pro portal!'
@@ -61,7 +59,7 @@ def create(testing=False, debug=False):
         cur = data[0]['s' if not testing else 'm']
         games = cur['base'].classes.games
         res_data = cur['session'].query(games).all()
-        res_dict = [get_json(game, exc_img_path) for game in res_data]
+        res_dict = [get_json(game) for game in res_data]
         return jsonify(games=res_dict), 200
 
     @app.route('/games/<int:game_id>', methods=['GET'])
@@ -72,14 +70,14 @@ def create(testing=False, debug=False):
             res_data = cur['session'].query(games).filter(games.id == game_id).one()
         except NoResultFound:
             return '', 204
-        return jsonify(get_json(res_data, exc_img_path)), 200
+        return jsonify(get_json(res_data)), 200
 
     @app.route('/games/<int:game_id>/teams', methods=['GET'])
     def get_teams(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         teams = cur['base'].classes.teams
         res_data = cur['session'].query(teams).filter(teams.game_id == game_id).all()
-        res_dict = [get_json(game, exc_img_path) for game in res_data]
+        res_dict = [get_json(game) for game in res_data]
         return jsonify(teams=res_dict), 200
 
     @app.route('/games/<int:game_id>/teams', methods=['POST'])
@@ -106,7 +104,7 @@ def create(testing=False, debug=False):
 
         res_data = cur['session'].query(teams).filter(teams.name == name).one()
 
-        return jsonify(get_json(res_data, exc_img_path)), 201
+        return jsonify(get_json(res_data)), 201
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>', methods=['GET'])
     def get_team(game_id, team_id):
@@ -120,7 +118,7 @@ def create(testing=False, debug=False):
         except InvalidRequestError:
             return '', 204
 
-        return jsonify(get_json(res_data, exc_img_path)), 200
+        return jsonify(get_json(res_data)), 200
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['GET'])
     def get_players(game_id, team_id):
@@ -128,7 +126,7 @@ def create(testing=False, debug=False):
         players = cur['base'].classes.players
 
         res_data = cur['session'].query(players).filter(players.team_id == team_id)
-        res_dict = [get_json(player, exc_img_path) for player in res_data]
+        res_dict = [get_json(player) for player in res_data]
         return jsonify(players=res_dict), 200
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['POST'])
@@ -158,7 +156,7 @@ def create(testing=False, debug=False):
         res_data = cur['session'].query(players).filter(players.name == name, players.nickname == nickname,
                                                         players.country == country).one()
 
-        return jsonify(get_json(res_data, exc_img_path)), 201
+        return jsonify(get_json(res_data)), 201
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players/<int:player_id>', methods=['GET'])
     def get_player(game_id, team_id, player_id):
@@ -166,6 +164,6 @@ def create(testing=False, debug=False):
         players = cur['base'].classes.players
 
         res_data = cur['session'].query(players).filter(players.id == player_id).one()
-        return jsonify(get_json(res_data, exc_img_path)), 200
+        return jsonify(get_json(res_data)), 200
 
     return app
