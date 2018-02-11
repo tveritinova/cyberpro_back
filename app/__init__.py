@@ -119,7 +119,7 @@ def create(testing=False, debug=False):
 
         return jsonify(get_json(res_data, exc_img_path)), 200
 
-    @app.route('/games/<int: game_id>/teams/<int: team_id>/players', methods=['GET'])
+    @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['GET'])
     def get_players(game_id, team_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         c = cur['base'].classes.players
