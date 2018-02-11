@@ -50,7 +50,7 @@ class BackApiTestCase(unittest.TestCase):
 
     def test_api_can_get_teams(self):
         """Test API can get all teams. (GET request)"""
-        result = self.client().get('/games/1/teams/')
+        result = self.client().get('/games/1/teams')
         self.assertEqual(result.status_code, 200)
 
     def test_api_can_post_team(self):
