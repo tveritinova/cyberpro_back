@@ -151,7 +151,7 @@ def create(testing=False, debug=False):
                 cur['session'].commit()
         except IntegrityError as e:
             if e.orig[0] == 1062:
-                return 'Name unique constraint failed', 400
+                return 'Unique constraint failed', 400
 
         res_data = cur['session'].query(players).filter(players.name == name, players.nickname == nickname,
                                                         players.country == country).one()

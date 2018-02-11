@@ -80,7 +80,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 201)
         team_id = ast.literal_eval(result.data)['id']
 
-        player = {'name': 'Test Player', 'nickname': 'test_player',
+        player = {'name': 'Test Player', 'nickname': 'test_player1',
                   'country': 'China', 'is_cap': 0, 'team_id': team_id}
         result = self.client().post('/games/1/teams/'+str(team_id)+'/players', data=json.dumps(player),
                                     headers=self.headers_to_post)
@@ -116,7 +116,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 201)
         team_id = ast.literal_eval(result.data)['id']
 
-        player = {'name': 'Test Player', 'nickname': 'test_player',
+        player = {'name': 'Test Player', 'nickname': 'test_player2',
                   'country': 'China', 'is_cap': 0, 'team_id': team_id}
         result = self.client().post('/games/1/teams/'+str(team_id)+'/players', data=json.dumps(player),
                                     headers=self.headers_to_post)
@@ -196,7 +196,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 201)
         to_team_id = ast.literal_eval(result.data)['id']
 
-        player = {'name': 'Test Player', 'nickname': 'test_player',
+        player = {'name': 'Test Player', 'nickname': 'test_player3',
                   'country': 'China', 'is_cap': 0}
         result = self.client().post('/games/1/teams/'+str(from_team_id)+'/players',
                                     data=json.dumps(player), headers=self.headers_to_post)
