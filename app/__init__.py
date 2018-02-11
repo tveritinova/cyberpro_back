@@ -360,7 +360,7 @@ def create(testing=False, debug=False):
         res_data = cur['session'].query(tournament_command)\
             .filter(tournament_command.team_id == team_id).all()
 
-        res = [cur['session'].query(tournaments).filter(tournaments.id == row.tournaments_id).one()
+        res = [cur['session'].query(tournaments).filter(tournaments.id == row.tournament_id).one()
                for row in res_data]
 
         return jsonify(teams=[get_json(ins) for ins in res]), 200
