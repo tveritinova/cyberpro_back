@@ -113,7 +113,7 @@ def create(testing=False, debug=False):
         teams = cur['base'].classes.teams
 
         try:
-            res_data = teams.get(team_id)
+            res_data = cur['session'].query(teams).get(teams.id == team_id).one()
         except NoResultFound:
             return '', 204
 
