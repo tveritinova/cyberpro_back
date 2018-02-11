@@ -198,7 +198,7 @@ def create(testing=False, debug=False):
             if e.orig[0] == 1062:
                 return 'Unique constraint failed', 400
 
-        res_data = cur['session'].query(tournaments).filter(tournaments.name == name)
+        res_data = cur['session'].query(tournaments).filter(tournaments.name == name).one()
 
         return jsonify(get_json(res_data)), 201
 
