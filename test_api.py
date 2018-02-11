@@ -138,8 +138,8 @@ class BackApiTestCase(unittest.TestCase):
 
     def test_api_can_post_and_get_tournament(self):
         """Test API can get all tournaments and one by id. (GET request)"""
-        tournament = {'name': 'test tournament', 'start_date': datetime.date(2018, 2, 11),
-                      'end_date': datetime.date(2018, 2, 12)}
+        tournament = {'name': 'test tournament'}#, 'start_date': datetime.date(2018, 2, 11),
+                      #'end_date': datetime.date(2018, 2, 12)}
         result = self.client().post('/tournaments', data=tournament, headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
