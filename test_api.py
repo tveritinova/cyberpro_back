@@ -258,6 +258,7 @@ class BackApiTestCase(unittest.TestCase):
         data = ast.literal_eval(result.data)
         flag = False
         for d in data['teams']:
+            raise Exception(d, team)
             if cmp(d, team) == 0:
                 flag = True
                 break
