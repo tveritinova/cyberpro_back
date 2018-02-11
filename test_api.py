@@ -164,6 +164,7 @@ class BackApiTestCase(unittest.TestCase):
         tournament = {'name': 'test tournament', 'start_date': datetime.date(2018, 2, 11),
                       'end_date': datetime.date(2018, 2, 12)}
         result = self.client().post('/tournaments', data=tournament, headers=self.headers_to_post)
+        self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
         match = {'num_in_stage': 1, 'date': datetime.datetime(2018, 2, 11, 11), 'tournament_id': tournament_id,
                  'first_team_id': first_team_id, 'second_team_id': second_team_id}
