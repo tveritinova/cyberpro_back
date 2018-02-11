@@ -30,6 +30,8 @@ def get_json(instance):
                 res_dict[cols[i]] = int(res_dict[cols[i]])
             if type(res_dict[cols[i]]) is datetime.datetime:
                 res_dict[cols[i]] = str(res_dict[cols[i]])
+            if type(res_dict[cols[i]]) is datetime.date:
+                res_dict[cols[i]] = str(res_dict[cols[i]])
     return res_dict
 
 
