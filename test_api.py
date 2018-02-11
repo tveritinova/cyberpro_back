@@ -254,12 +254,12 @@ class BackApiTestCase(unittest.TestCase):
         result = self.client().get('/games/1/tournaments/'+str(tournament_id)+'/teams')
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
-        self.assertIn(data['team_id'], team_id)
+        self.assertIn(data['teams'], team)
 
         result = self.client().get('/games/1/teams/'+str(team_id)+'/tournaments')
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
-        self.assertIn(data['tournaments_id'], tournament_id)
+        self.assertIn(data['tournaments'], tournament)
 
 
     def tearDown(self):
