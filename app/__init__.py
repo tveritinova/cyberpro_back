@@ -265,6 +265,45 @@ def create(testing=False, debug=False):
         res_data = cur['session'].query(matches).filter(matches.tournament_id == tournament_id).one()
         return jsonify(get_json(res_data)), 200
 
+    @app.route('/games/<int:game_id>/transactions', methods=['GET'])
+    def get_transactions(game_id):
+        cur = data[choose(game_id)]['s' if not testing else 'm']
+        transactions = cur['base'].classes.matches
+        res_data = cur['session'].query(transactions).all()
+        return jsonify(transactions=[get_json(d) for d in res_data]), 200
 
+    @app.route('/games/<int:game_id>/transactions', methods=['POST'])
+    def post_transactions(game_id):
+        cur = data[choose(game_id)]['m']
+        transactions = cur['base'].classes.players_transactions
+        players = cur['base'].classes.players
+
+        player_id = ast.literal_eval(request.data).get('player_id')
+        from_team_id = ast.literal_eval(request.data).get('from_team_id')
+        to_team_id = ast.literal_eval(request.data).get('to_team_id')
+        date = ast.literal_eval(request.data).get('date')
+
+        if player_id is None or from_team_id is None or to_team_id is None or date is None:
+            return 'Missed data', 400
+
+        cur['session'].add(transactions(player_id=player_id, from_team_id=from_team_id,
+                                        to_team_id=to_team_id, date=date))
+        cur['session'].query(players).update().where(players.id == player_id).values(team_id=to_team_id)
+
+        try:
+            if testing:
+                cur['session'].flush()
+            else:
+                cur['session'].commit()
+        except IntegrityError as e:
+            if e.orig[0] == 1062:
+                return 'Unique constraint failed', 400
+            else:
+                return '', 400
+
+        res_data = cur['session'].query(transactions).filter(transactions.player_id == player_id,
+                                                             transactions.date == date).one()
+
+        return jsonify(get_json(res_data)), 201
 
     return app
