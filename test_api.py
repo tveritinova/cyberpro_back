@@ -9,7 +9,7 @@ class BackApiTestCase(unittest.TestCase):
 
     def setUp(self):
         """Define test variables and initialize app."""
-        self.app = create()
+        self.app = create(debug=True, testing=True)
         self.client = self.app.test_client
         self.games = [{'name': 'dota2', 'id': 1},
                       {'name': 'cs-go', 'id': 2},
