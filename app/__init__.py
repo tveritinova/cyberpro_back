@@ -140,9 +140,7 @@ def create(testing=False, debug=False):
         country = ast.literal_eval(request.data).get('country')
         is_cap = ast.literal_eval(request.data).get('is_cap')
 
-        raise Exception(name, nickname, country, is_cap)
-
-        if not name or not nickname or not country or not is_cap:
+        if not name or not nickname or not country or is_cap == None:
             return 'Missed data', 400
 
         cur['session'].add(players(name=name, nickname=nickname, country=country, is_cap=is_cap, team_id=team_id))
