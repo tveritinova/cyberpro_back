@@ -97,14 +97,14 @@ def create(testing=False, debug=False):
 
         # catch failed unique cons
 
-        if testing:
-            cur['session'].flush()
-        else:
-            try:
+        try:
+            if testing:
+                cur['session'].flush()
+            else:
                 cur['session'].commit()
-            except IntegrityError as e:
-                if e.orig[0] == 1062:
-                    return 'Name unique constraint failed', 400
+        except IntegrityError as e:
+            if e.orig[0] == 1062:
+                return 'Name unique constraint failed', 400
 
         res_data = cur['session'].query(cur['teams']).filter(cur['teams'].c.name == name).one()
 
