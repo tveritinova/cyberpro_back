@@ -342,20 +342,27 @@ def create(testing=False, debug=False):
     def get_teams_for_tournament(game_id, tournament_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournament_command = cur['base'].classes.tournament_command
+        teams = cur['base'].classes.teams
 
         res_data = cur['session'].query(tournament_command)\
             .filter(tournament_command.tournament_id == tournament_id).all()
 
-        return jsonify(teams=[get_json(ins) for ins in res_data]), 200
+        res = [cur['session'].query(teams).filter(teams.id == row.team_id).one() for row in res_data]
+
+        return jsonify(teams=[get_json(ins) for ins in res]), 200
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/tournaments', methods=['GET'])
     def get_tournaments_for_team(game_id, team_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournament_command = cur['base'].classes.tournament_command
+        tournaments = cur['base'].classes.tournaments
 
         res_data = cur['session'].query(tournament_command)\
             .filter(tournament_command.team_id == team_id).all()
 
-        return jsonify(teams=[get_json(ins) for ins in res_data]), 200
+        res = [cur['session'].query(tournaments).filter(tournaments.id == row.tournaments_id).one()
+               for row in res_data]
+
+        return jsonify(teams=[get_json(ins) for ins in res]), 200
 
     return app
