@@ -82,7 +82,7 @@ class BackApiTestCase(unittest.TestCase):
 
         player = {'name': 'Test Player', 'nickname': 'test_player',
                   'country': 'China', 'is_cap': False, 'team_id': team_id}
-        result = self.client().post('/games/1/teams/'+team_id+'/players', data=json.dumps(player),
+        result = self.client().post('/games/1/teams/'+str(team_id)+'/players', data=json.dumps(player),
                                     headers=self.headers_to_post)
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
@@ -106,7 +106,7 @@ class BackApiTestCase(unittest.TestCase):
         result = self.client().post('/games/1/teams', data=json.dumps(team), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         team_id = ast.literal_eval(result.data)['id']
-        result = self.client().get('/games/1/teams/'+team_id+'/players/')
+        result = self.client().get('/games/1/teams/'+str(team_id)+'/players/')
         self.assertEqual(result.status_code, 200)
 
     def test_api_can_get_player(self):
