@@ -9,6 +9,7 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from secure_info import user, password, host, port, socket
 from collections import defaultdict
 import ast
+import datetime
 
 
 def nested_dict():
@@ -27,6 +28,8 @@ def get_json(instance):
             res_dict[cols[i]] = getattr(instance, cols[i])
             if type(res_dict[cols[i]]) is bool:
                 res_dict[cols[i]] = int(res_dict[cols[i]])
+            if type(res_dict[cols[i]]) is datetime.datetime:
+                res_dict[cols[i]] = str(res_dict[cols[i]])
     return res_dict
 
 
