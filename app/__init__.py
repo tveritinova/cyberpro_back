@@ -76,7 +76,7 @@ def create(testing=False, debug=False):
     def get_teams(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         teams = cur['base'].classes.teams
-        res_data = cur['session'].query(teams).filter(teams.game_id == game_id).one()
+        res_data = cur['session'].query(teams).filter(teams.game_id == game_id).all()
         res_dict = [get_json(game, exc_img_path) for game in res_data]
         return jsonify(teams=res_dict), 200
 
