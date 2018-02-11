@@ -175,7 +175,7 @@ def create(testing=False, debug=False):
         return jsonify(tournaments=res_dict), 200
 
     @app.route('/tournaments', methods=['POST'])
-    def get_tournaments():
+    def post_tournaments():
         cur = data[0]['s' if not testing else 'm']
         tournaments = cur['base'].classes.tournaments
 
