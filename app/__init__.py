@@ -65,9 +65,9 @@ def create(testing=False, debug=False):
     @app.route('/games/<int:game_id>', methods=['GET'])
     def get_game(game_id):
         cur = data[0]['s' if not testing else 'm']
-        games = cur['base'].classes.games
+        games = cur['base'].classes.games.__table__
         try:
-            res_data = cur['session'].query(games).get(game_id)
+            res_data = games.query.get(game_id)
         except NoResultFound:
             return '', 204
         return jsonify(get_json(res_data, exc_img_path)), 200
