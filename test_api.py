@@ -19,8 +19,8 @@ class BackApiTestCase(unittest.TestCase):
                       {'name': 'overwatch', 'id': 5}]
 
         self.headers_to_post = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-        raise Exception("here")
 
+    '''
     def test_api_can_get_games(self):
         """Test API can get games. (GET request)"""
         res = self.client().get('/games')
@@ -136,7 +136,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(data['country'], player['country'])
         self.assertEqual(data['team_id'], player['team_id'])
         self.assertEqual(data['is_cap'], player['is_cap'])
-
+    '''
     def test_api_can_post_and_get_tournament(self):
         """Test API can get all tournaments and one by id. (GET request)"""
         tournament = {'name': 'test tournament', 'start_date': str(datetime.date(2018, 2, 11)),
