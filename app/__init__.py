@@ -130,7 +130,7 @@ def create(testing=False, debug=False):
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['POST'])
     def post_players(game_id, team_id):
-        cur = data[choose(game_id)]['s' if not testing else 'm']
+        cur = data[choose(game_id)]['m']
         players = cur['base'].classes.players
 
         name = ast.literal_eval(request.data).get('name')
@@ -165,17 +165,17 @@ def create(testing=False, debug=False):
         res_data = cur['session'].query(players).filter(players.id == player_id).one()
         return jsonify(get_json(res_data)), 200
 
-    @app.route('/tournaments', methods=['GET'])
-    def get_tournaments():
-        cur = data[0]['s' if not testing else 'm']
+    @app.route('/game/<int:game_id>/tournaments', methods=['GET'])
+    def get_tournaments(game_id):
+        cur = data[choose(game_id)]['s' if not testing else 'm']
         tournaments = cur['base'].classes.tournaments
         res_data = cur['session'].query(tournaments).all()
         res_dict = [get_json(tournament) for tournament in res_data]
         return jsonify(tournaments=res_dict), 200
 
-    @app.route('/tournaments', methods=['POST'])
-    def post_tournaments():
-        cur = data[0]['s' if not testing else 'm']
+    @app.route('/game/<int:game_id>/tournaments', methods=['POST'])
+    def post_tournaments(game_id):
+        cur = data[choose(game_id)]['m']
         tournaments = cur['base'].classes.tournaments
 
         name = ast.literal_eval(request.data).get('name')
@@ -195,16 +195,76 @@ def create(testing=False, debug=False):
         except IntegrityError as e:
             if e.orig[0] == 1062:
                 return 'Unique constraint failed', 400
+            else:
+                return '', 400
 
         res_data = cur['session'].query(tournaments).filter(tournaments.name == name).one()
 
         return jsonify(get_json(res_data)), 201
 
-    @app.route('/tournaments/<int:tournament_id>', methods=['GET'])
-    def get_tournament(tournament_id):
-        cur = data[0]['s' if not testing else 'm']
+    @app.route('/game/<int:game_id>/tournaments/<int:tournament_id>', methods=['GET'])
+    def get_tournament(game_id, tournament_id):
+        cur = data[choose(game_id)]['s' if not testing else 'm']
         tournaments = cur['base'].classes.tournaments
         res_data = cur['session'].query(tournaments).filter(tournaments.id == tournament_id).one()
         return jsonify(get_json(res_data)), 200
+
+    @app.route('/game/<int:game_id>/matches', methods=['GET'])
+    def get_matches(game_id):
+        cur = data[choose(game_id)]['s' if not testing else 'm']
+        matches = cur['base'].classes.matches
+        res_data = cur['session'].query(matches).all()
+        res_dict = [get_json(match) for match in res_data]
+        return jsonify(matches=res_dict), 200
+
+    @app.route('/game/<int:game_id>/matches', methods=['POST'])
+    def post_match(game_id):
+        cur = data[choose(game_id)]['m']
+        matches = cur['base'].classes.matches
+
+        tournament_id = ast.literal_eval(request.data).get('tournament_id')
+        first_team_id = ast.literal_eval(request.data).get('first_team_id')
+        second_team_id = ast.literal_eval(request.data).get('second_team_id')
+        num_in_stage = ast.literal_eval(request.data).get('num_in_stage')
+        date = ast.literal_eval(request.data).get('date')
+
+        if tournament_id is None or first_team_id is None or second_team_id is None\
+                or num_in_stage is None or date is None:
+            return 'Missed data', 400
+
+        cur['session'].add(matches(tournament_id=tournament_id, first_team_id=first_team_id,
+                                   second_team_id=second_team_id, num_in_stage=num_in_stage, date=date))
+
+        try:
+            if testing:
+                cur['session'].flush()
+            else:
+                cur['session'].commit()
+        except IntegrityError as e:
+            if e.orig[0] == 1062:
+                return 'Unique constraint failed', 400
+            else:
+                return '', 400
+
+        res_data = cur['session'].query(matches).filter(matches.tournament_id == tournament_id,
+                                                        matches.date == date).one()
+
+        return jsonify(get_json(res_data)), 201
+
+    @app.route('/game/<int:game_id>/matches/<int:match_id>', methods=['GET'])
+    def get_match(game_id, match_id):
+        cur = data[choose(game_id)]['s' if not testing else 'm']
+        matches = cur['base'].classes.matches
+        res_data = cur['session'].query(matches).filter(matches.id == match_id).one()
+        return jsonify(get_json(res_data)), 200
+
+    @app.route('/game/<int:game_id>/tournaments/<int:tournament_id>/matches', methods=['GET'])
+    def get_match_for_tournament(game_id, tournament_id):
+        cur = data[choose(game_id)]['s' if not testing else 'm']
+        matches = cur['base'].classes.matches
+        res_data = cur['session'].query(matches).filter(matches.tournament_id == tournament_id).one()
+        return jsonify(get_json(res_data)), 200
+
+
 
     return app

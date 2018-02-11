@@ -140,11 +140,11 @@ class BackApiTestCase(unittest.TestCase):
         """Test API can get all tournaments and one by id. (GET request)"""
         tournament = {'name': 'test tournament', 'start_date': str(datetime.date(2018, 2, 11)),
                       'end_date': str(datetime.date(2018, 2, 12))}
-        result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
+        result = self.client().post('/games/1/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
 
-        result = self.client().get('/tournaments/'+str(tournament_id))
+        result = self.client().get('/games/1/tournaments/'+str(tournament_id))
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
         self.assertEqual(data['name'], tournament['name'])
@@ -152,7 +152,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(data['end_date'], str(tournament['end_date']))
 
     def test_api_can_get_tournaments(self):
-        result = self.client().get('/tournaments')
+        result = self.client().get('/games/1/tournaments')
         self.assertEqual(result.status_code, 200)
         self.assertEqual(list(ast.literal_eval(result.data).keys()), ['tournaments'])
 
@@ -167,20 +167,21 @@ class BackApiTestCase(unittest.TestCase):
         second_team_id = ast.literal_eval(result.data)['id']
         tournament = {'name': 'test tournament first', 'start_date': str(datetime.date(2018, 2, 11)),
                       'end_date': str(datetime.date(2018, 2, 12))}
-        result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
+        result = self.client().post('/games/1/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
         match = {'num_in_stage': 1, 'date': str(datetime.datetime(2018, 2, 11, 11)), 'tournament_id': tournament_id,
                  'first_team_id': first_team_id, 'second_team_id': second_team_id}
 
-        result = self.client().post('/matches', data=json.dumps(match), headers=self.headers_to_post)
+        result = self.client().post('/game/1/matches', data=json.dumps(match), headers=self.headers_to_post)
+        self.assertEqual(result.status_code, 201)
         self.match_id = ast.literal_eval(result.data)['id']
 
-        result = self.client().get('/matches')
+        result = self.client().get('/games/1/matches')
         self.assertEqual(result.status_code, 200)
         self.assertEqual(list(ast.literal_eval(result.data).keys()), ['matches'])
 
-        result = self.client().get('/matches/' + str(self.match_id))
+        result = self.client().get('/games/1/matches/' + str(self.match_id))
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
         self.assertEqual(data['id'], self.match_id)
@@ -189,6 +190,10 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(data['second_team_id'], match['second_team_id'])
         self.assertEqual(data['num_in_stage'], match['num_in_stage'])
         self.assertEqual(data['date'], str(match['date']))
+
+        result = self.client().get('/games/1/tournaments/'+tournament_id+'/matches')
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(ast.literal_eval(result.data), match)
 
     def test_players_transactions(self):
         first_team = {'name': 'team7', 'country': 'russia'}
@@ -205,7 +210,7 @@ class BackApiTestCase(unittest.TestCase):
                   'country': 'China', 'is_cap': 0}
         result = self.client().post('/games/1/teams/'+str(from_team_id)+'/players',
                                     data=json.dumps(player), headers=self.headers_to_post)
-        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.status_code, 201)
         player_id = ast.literal_eval(result.data)['id']
 
         transaction = {'date': str(datetime.date(2018, 2, 12)), 'player_id': player_id,
@@ -213,13 +218,13 @@ class BackApiTestCase(unittest.TestCase):
 
         result = self.client().post('/transactions', data=json.dumps(transaction), header=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
-        self.transaction_id = ast.literal_eval(result.data)['id']
+        transaction_id = ast.literal_eval(result.data)['id']
 
         # check player's team changed
         result.self.client().get('/games/1/teams/'+str(to_team_id)+'/players/'+player_id)
         self.assertEqual(result.status_code, 200)
 
-        result = self.client().get('/transactions/'+str(self.transaction_id))
+        result = self.client().get('/transactions/'+str(transaction_id))
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
         self.assertEqual(data['player_id'], transaction['player_id'])
@@ -234,7 +239,7 @@ class BackApiTestCase(unittest.TestCase):
     def test_team_in_tournament(self):
         tournament = {'name': 'test tournament second', 'start_date': str(datetime.date(2018, 2, 11)),
                       'end_date': str(datetime.date(2018, 2, 12))}
-        result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
+        result = self.client().post('/games/1/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
 
@@ -243,16 +248,16 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 201)
         team_id = ast.literal_eval(result.data)['id']
 
-        result = self.client().post('/tournament/'+str(tournament_id),
+        result = self.client().post('/games/1/tournament/'+str(tournament_id),
                                     data={'tournament_id': tournament_id, 'team_id': team_id})
         self.assertEqual(result.status_code, 201)
 
-        result = self.client().get('/tournament/'+str(tournament_id)+'/teams')
+        result = self.client().get('/games/1/tournament/'+str(tournament_id)+'/teams')
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
         self.assertIn(data['teams_id'], team_id)
 
-        result = self.client().get('/teams/'+str(team_id)+'/tournaments')
+        result = self.client().get('/games/1/teams/'+str(team_id)+'/tournaments')
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
         self.assertIn(data['tournaments_id'], tournament_id)
