@@ -172,6 +172,40 @@ def create(testing=False, debug=False):
         tournaments = cur['base'].classes.tournaments
         res_data = cur['session'].query(tournaments).all()
         res_dict = [get_json(tournament) for tournament in res_data]
-        return jsonify(games=res_dict), 200
+        return jsonify(tournaments=res_dict), 200
+
+    @app.route('/tournaments', methods=['POST'])
+    def get_tournaments():
+        cur = data[0]['s' if not testing else 'm']
+        tournaments = cur['base'].classes.tournaments
+
+        name = ast.literal_eval(request.data).get('name')
+        start_date = ast.literal_eval(request.data).get('start_date')
+        end_date = ast.literal_eval(request.data).get('start_date')
+
+        if name is None or start_date is None or end_date is None:
+            return 'Missed data', 400
+
+        cur['session'].add(tournaments(name=name, start_date=start_date, end_date=end_date))
+
+        try:
+            if testing:
+                cur['session'].flush()
+            else:
+                cur['session'].commit()
+        except IntegrityError as e:
+            if e.orig[0] == 1062:
+                return 'Unique constraint failed', 400
+
+        res_data = cur['session'].query(tournaments).filter(tournaments.name == name)
+
+        return jsonify(get_json(res_data)), 201
+
+    @app.route('/tournaments/<int:tournament_id>', methods=['GET'])
+    def get_tournament(tournament_id):
+        cur = data[0]['s' if not testing else 'm']
+        tournaments = cur['base'].classes.tournaments
+        res_data = cur['session'].query(tournaments).filter(tournaments.id == tournament_id).one()
+        return jsonify(get_json(res_data)), 200
 
     return app
