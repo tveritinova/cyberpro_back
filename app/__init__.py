@@ -134,11 +134,13 @@ def create(testing=False, debug=False):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         players = cur['base'].classes.players
 
-        raise Exception(request.data)
+
         name = ast.literal_eval(request.data).get('name')
         nickname = ast.literal_eval(request.data).get('nickname')
         country = ast.literal_eval(request.data).get('country')
         is_cap = ast.literal_eval(request.data).get('is_cap')
+
+        raise Exception(name, nickname, country, is_cap)
 
         if not name or not nickname or not country or not is_cap:
             return 'Missed data', 400
