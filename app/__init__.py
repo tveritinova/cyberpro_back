@@ -313,4 +313,49 @@ def create(testing=False, debug=False):
         res_data = cur['session'].query(transactions).filter(transactions.id == transaction_id).one()
         return jsonify(get_json(res_data)), 200
 
+    @app.route('/games/<int:game_id>/tournaments/<int:tournament_id>/teams', methods=['POST'])
+    def post_team_for_tournament(game_id, tournament_id):
+        cur = data[choose(game_id)]['m']
+        tournament_command = cur['base'].classes.tournament_command
+
+        team_id = ast.literal_eval(request.data).get('team_id')
+
+        if team_id is None:
+           return 'Missed data', 400
+
+        cur['session'].add(tournament_command(tournament_id=tournament_id, team_id=team_id))
+
+        try:
+            if testing:
+                cur['session'].flush()
+            else:
+                cur['session'].commit()
+        except IntegrityError as e:
+            if e.orig[0] == 1062:
+                return 'Unique constraint failed', 400
+            else:
+                return '', 400
+
+        return '', 201
+
+    @app.route('games/<int:game_id>/tournaments/<int:tournament_id>/teams', methods=['GET'])
+    def get_teams_for_tournament(game_id, tournament_id):
+        cur = data[choose(game_id)]['s' if not testing else 'm']
+        tournament_command = cur['base'].classes.tournament_command
+
+        res_data = cur['session'].query(tournament_command)\
+            .filter(tournament_command.tournament_id == tournament_id).all()
+
+        return jsonify(teams=[get_json(ins) for ins in res_data]), 200
+
+    @app.route('games/<int:game_id>/teams/<int:team_id>/tournaments', methods=['GET'])
+    def get_tournaments_for_team(game_id, team_id):
+        cur = data[choose(game_id)]['s' if not testing else 'm']
+        tournament_command = cur['base'].classes.tournament_command
+
+        res_data = cur['session'].query(tournament_command)\
+            .filter(tournament_command.team_id == team_id).all()
+
+        return jsonify(teams=[get_json(ins) for ins in res_data]), 200
+
     return app
