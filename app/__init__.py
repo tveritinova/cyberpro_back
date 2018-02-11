@@ -86,7 +86,7 @@ def create(testing=False, debug=False):
 
     @app.route('/games/<int:game_id>/teams', methods=['POST'])
     def post_teams(game_id):
-        raise Exception("here")
+        #raise Exception("here")
         cur = data[choose(game_id)]['m']
 
         name = ast.literal_eval(request.data).get('name')
@@ -102,7 +102,7 @@ def create(testing=False, debug=False):
         #        "from games where id = "+str(game_id)+" limit 1"
         #cur['engine'].execute(query)
 
-        raise Exception("here")
+        #raise Exception("here")
 
         base = cur['base']
         game = cur['session'].query(base.classes.games).get(game_id)
