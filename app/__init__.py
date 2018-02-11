@@ -166,4 +166,12 @@ def create(testing=False, debug=False):
         res_data = cur['session'].query(players).filter(players.id == player_id).one()
         return jsonify(get_json(res_data)), 200
 
+    @app.route('/tournaments', method=['GET'])
+    def get_tournaments():
+        cur = data[0]['s' if not testing else 'm']
+        tournaments = cur['base'].classes.tournaments
+        res_data = cur['session'].query(tournaments).all()
+        res_dict = [get_json(tournaments) for tournament in res_data]
+        return jsonify(games=res_dict), 200
+
     return app
