@@ -103,7 +103,7 @@ def create(testing=False, debug=False):
             if e.orig[0] == 1062:
                 return 'Name unique constraint failed', 400
 
-        res_data = cur['session'].query(teams).filter(cur['teams'].c.name == name).one()
+        res_data = cur['session'].query(teams).filter(teams.name == name).one()
 
         return jsonify(get_json(res_data, cur['teams_exc'])), 201
 
