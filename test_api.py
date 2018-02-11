@@ -63,7 +63,7 @@ class BackApiTestCase(unittest.TestCase):
         result = self.client().get('/games/1/teams/'+str(team_id))
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
-        self.assertEqual(data['id'], team['team_id'])
+        self.assertEqual(data['id'], team_id)
         self.assertEqual(data['name'], team['name'])
         self.assertEqual(data['country'], team['country'])
 
