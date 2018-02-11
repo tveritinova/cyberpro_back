@@ -130,10 +130,11 @@ def create(testing=False, debug=False):
         return jsonify(players=res_dict), 200
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['POST'])
-    def get_players(game_id, team_id):
+    def post_players(game_id, team_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         players = cur['base'].classes.players
 
+        #raise Exception(request.data)
         name = ast.literal_eval(request.data).get('name')
         nickname = ast.literal_eval(request.data).get('nickname')
         country = ast.literal_eval(request.data).get('country')
