@@ -1,8 +1,10 @@
+
 from flask import Flask, jsonify, request
 import json
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.ext.automap import automap_base
 from secure_info import user, password, host, port, socket
 from collections import defaultdict
 import ast
@@ -32,9 +34,9 @@ def get_row(id, table, session):
     return session.query(table).filter(table.c.id == id).one()
 
 
-def create():
+def create(testing=False, debug=False):
     app = Flask(__name__)
-    app.config['DEBUG'] = True
+    app.config['DEBUG'] = debug
 
     data = nested_dict()
 
@@ -48,6 +50,9 @@ def create():
             data[i][r]['games_exc'] = ['img_path']
             data[i][r]['teams'] = Table('teams', data[i][r]['metadata'], autoload=True)
             data[i][r]['teams_exc'] = ['img_path']
+
+            data[i][r]['base'] = automap_base()
+            data[i][r]['base'].prepare(data[i][r]['engine'], reflect=True)
 
     @app.route('/')
     def root():
@@ -91,11 +96,23 @@ def create():
         if country == None: raise Exception("country id none")
 
 
-        query = "insert into teams (name, country, game_id) " +\
-                "select \'"+name+"\',\'"+country+"\',id " +\
-                "from games where id = "+str(game_id)+" limit 1"
+        #query = "insert into teams (name, country, game_id) " +\
+        #        "select \'"+name+"\',\'"+country+"\',id " +\
+        #        "from games where id = "+str(game_id)+" limit 1"
+        #cur['engine'].execute(query)
 
-        cur['engine'].execute(query)
+        ##
+        base = cur['base']
+        game = cur['session'].query(base.classes.games).get(game_id)
+        cur['session'].add(base.classes.teams(name=name, country=country, game_id=game))
+        ##
+
+        # catch failed unique cons
+
+        if testing:
+            cur['session'].flush()
+        else:
+            cur['session'].commit()
 
         res_data = cur['session'].query(cur['teams']).filter(cur['teams'].c.name == name).one()
 
