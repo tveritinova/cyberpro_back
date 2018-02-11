@@ -138,7 +138,7 @@ class BackApiTestCase(unittest.TestCase):
 
     def test_api_can_post_and_get_tournament(self):
         """Test API can get all tournaments and one by id. (GET request)"""
-        tournament = {'name': 'test tournament', 'start_date': datetime.date(2018, 2, 11),
+        tournament = {'name': 'test tournament', 'start_date': str(datetime.date(2018, 2, 11)),
                       'end_date': str(datetime.date(2018, 2, 12))}
         result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
@@ -166,12 +166,12 @@ class BackApiTestCase(unittest.TestCase):
         result = self.client().post('/games/1/teams', data=json.dumps(second_team), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         second_team_id = ast.literal_eval(result.data)['id']
-        tournament = {'name': 'test tournament', 'start_date': datetime.date(2018, 2, 11),
+        tournament = {'name': 'test tournament', 'start_date': str(datetime.date(2018, 2, 11)),
                       'end_date': str(datetime.date(2018, 2, 12))}
         result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         tournament_id = ast.literal_eval(result.data)['id']
-        match = {'num_in_stage': 1, 'date': datetime.datetime(2018, 2, 11, 11), 'tournament_id': tournament_id,
+        match = {'num_in_stage': 1, 'date': str(datetime.datetime(2018, 2, 11, 11)), 'tournament_id': tournament_id,
                  'first_team_id': first_team_id, 'second_team_id': second_team_id}
 
         result = self.client().post('/matches', data=json.dump(match), headers=self.headers_to_post)
