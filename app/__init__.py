@@ -262,8 +262,8 @@ def create(testing=False, debug=False):
     def get_match_for_tournament(game_id, tournament_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         matches = cur['base'].classes.matches
-        res_data = cur['session'].query(matches).filter(matches.tournament_id == tournament_id).one()
-        return jsonify(get_json(res_data)), 200
+        res_data = cur['session'].query(matches).filter(matches.tournament_id == tournament_id).all()
+        return jsonify(matches=[get_json(d) for d in res_data]), 200
 
     @app.route('/games/<int:game_id>/transactions', methods=['GET'])
     def get_transactions(game_id):
