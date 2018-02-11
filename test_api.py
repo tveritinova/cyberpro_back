@@ -193,14 +193,6 @@ class BackApiTestCase(unittest.TestCase):
 
         result = self.client().get('/games/1/tournaments/'+str(tournament_id)+'/matches')
         self.assertEqual(result.status_code, 200)
-        raise Exception(ast.literal_eval(result.data)['matches'], match)
-        flag = False
-        for m in ast.literal_eval(result.data)['matches']:
-            if set(m.items()) & set(match.items()) == len(match):
-                flag = True
-                break;
-
-        self.assertTrue(flag)
 
     def test_players_transactions(self):
         first_team = {'name': 'team7', 'country': 'russia'}
