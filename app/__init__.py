@@ -89,9 +89,8 @@ def create(testing=False, debug=False):
         country = ast.literal_eval(request.data).get('country')
 
         if not name or not country:
-            return 'Missed name, country data', 400
+            return 'Missed data', 400
 
-        base = cur['base']
         cur['session'].add(teams(name=name, country=country, game_id=game_id))
 
         try:
@@ -129,6 +128,35 @@ def create(testing=False, debug=False):
         res_data = cur['session'].query(players).filter(players.team_id == team_id)
         res_dict = [get_json(player, exc_img_path) for player in res_data]
         return jsonify(players=res_dict), 200
+
+    @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['POST'])
+    def get_players(game_id, team_id):
+        cur = data[choose(game_id)]['s' if not testing else 'm']
+        players = cur['base'].classes.players
+
+        name = ast.literal_eval(request.data).get('name')
+        nickname = ast.literal_eval(request.data).get('nickname')
+        country = ast.literal_eval(request.data).get('country')
+        is_cap = bool(ast.literal_eval(request.data).get('is_cap'))
+
+        if not name or not nickname or not country or not is_cap:
+            return 'Missed data', 400
+
+        cur['session'].add(players(name=name, nickname=nickname, country=country, is_cap=is_cap, team_id=team_id))
+
+        try:
+            if testing:
+                cur['session'].flush()
+            else:
+                cur['session'].commit()
+        except IntegrityError as e:
+            if e.orig[0] == 1062:
+                return 'Name unique constraint failed', 400
+
+        res_data = cur['session'].query(players).filter(players.name == name, players.nickname == nickname,
+                                                        players.country == country).one()
+
+        return jsonify(get_json(res_data, exc_img_path)), 201
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players/<int:player_id>', methods=['GET'])
     def get_player(game_id, team_id, player_id):
