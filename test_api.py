@@ -156,7 +156,6 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(list(ast.literal_eval(result.data).keys()), ['tournaments'])
 
-    '''
     def test_matches(self):
         first_team = {'name': 'team5', 'country': 'russia'}
         result = self.client().post('/games/1/teams', data=json.dumps(first_team), headers=self.headers_to_post)
@@ -166,7 +165,7 @@ class BackApiTestCase(unittest.TestCase):
         result = self.client().post('/games/1/teams', data=json.dumps(second_team), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
         second_team_id = ast.literal_eval(result.data)['id']
-        tournament = {'name': 'test tournament', 'start_date': str(datetime.date(2018, 2, 11)),
+        tournament = {'name': 'test tournament first', 'start_date': str(datetime.date(2018, 2, 11)),
                       'end_date': str(datetime.date(2018, 2, 12))}
         result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
@@ -233,7 +232,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
 
     def test_team_in_tournament(self):
-        tournament = {'name': 'test tournament', 'start_date': str(datetime.date(2018, 2, 11)),
+        tournament = {'name': 'test tournament second', 'start_date': str(datetime.date(2018, 2, 11)),
                       'end_date': str(datetime.date(2018, 2, 12))}
         result = self.client().post('/tournaments', data=json.dumps(tournament), headers=self.headers_to_post)
         self.assertEqual(result.status_code, 201)
@@ -257,7 +256,7 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         data = ast.literal_eval(result.data)
         self.assertIn(data['tournaments_id'], tournament_id)
-    '''
+
 
     def tearDown(self):
         """teardown all initialized variables."""
