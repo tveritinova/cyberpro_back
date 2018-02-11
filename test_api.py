@@ -70,7 +70,7 @@ class BackApiTestCase(unittest.TestCase):
         rv = self.client().post('/games/1/teams', data=json.dumps(team), headers=self.headers_to_post)
         self.assertEqual(rv.status_code, 400)
 
-        result = self.client().get('/games/1/teams/'+str(ast.literal_eval(rv.data)['id']+1))
+        result = self.client().get('/games/1/teams/'+str(team_id+1))
         self.assertEqual(result.status_code, 404)
 
     def test_api_can_post_and_get_player(self):
