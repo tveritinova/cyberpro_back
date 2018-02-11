@@ -18,6 +18,8 @@ class BackApiTestCase(unittest.TestCase):
                       {'name': 'hearthstone', 'id': 4},
                       {'name': 'overwatch', 'id': 5}]
 
+        self.headers_to_post = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+
         self.first_team = {'name': 'team1', 'country': 'russia'}
         result = self.client().post('/games/1/teams',
                                     data=json.dumps(self.first_team), headers=self.headers_to_post)
@@ -57,8 +59,6 @@ class BackApiTestCase(unittest.TestCase):
         result = self.client().post('/tournaments', data={'tournament_id': self.tournament_id,
                                                           'team_id': self.first_team_id})
         self.tournament_id = ast.literal_eval(result.data)['id']
-
-        self.headers_to_post = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 
     def test_api_can_get_all_games(self):
         """Test API can get games. (GET request)"""
