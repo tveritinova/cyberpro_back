@@ -47,6 +47,11 @@ class BackApiTestCase(unittest.TestCase):
         self.assertEqual(results.status_code, 200)
         self.assertEqual(ast.literal_eval(results.data)['name'], data_to_put['name'])
         self.assertEqual(ast.literal_eval(results.data)['country'], data_to_put['country'])
+        rv = self.client().post('/games/1/teams',
+                                data=json.dumps(data_to_put),
+                                headers={'Content-Type':'application/json',
+                                         'Accept':'application/json'})
+        self.assertEqual(rv.status_code, 400)
 
     def tearDown(self):
         """teardown all initialized variables."""
