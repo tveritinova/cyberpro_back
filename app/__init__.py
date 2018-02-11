@@ -124,10 +124,10 @@ def create(testing=False, debug=False):
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['GET'])
     def get_players(game_id, team_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
-        c = cur['base'].classes.players
+        players = cur['base'].classes.players
 
-        res_data = c.query.all()
-        res_dict = [get_json(player) for player in res_data]
-        return jsonify(games=res_dict), 200
+        res_data = cur['session'].query(players).filter(players.team_id == team_id)
+        res_dict = [get_json(player, exc_img_path) for player in res_data]
+        return jsonify(players=res_dict), 200
 
     return app
