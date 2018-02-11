@@ -105,7 +105,7 @@ def create(testing=False, debug=False):
 
         res_data = cur['session'].query(teams).filter(teams.name == name).one()
 
-        return jsonify(get_json(res_data, cur['teams_exc'])), 201
+        return jsonify(get_json(res_data, exc_img_path)), 201
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>', methods=['GET'])
     def get_team(game_id, team_id):
