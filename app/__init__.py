@@ -363,6 +363,6 @@ def create(testing=False, debug=False):
         res = [cur['session'].query(tournaments).filter(tournaments.id == row.tournament_id).one()
                for row in res_data]
 
-        return jsonify(teams=[get_json(ins) for ins in res]), 200
+        return jsonify(tournaments=[get_json(ins) for ins in res]), 200
 
     return app
