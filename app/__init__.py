@@ -1,5 +1,5 @@
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import json
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
@@ -36,7 +36,7 @@ def get_json(instance):
 
 
 def create(testing=False, debug=False):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="../cyberpro_front/static/dist", template_folder="../cyberpro_front/static")
     app.config['DEBUG'] = debug
 
     crashed_master = None
@@ -58,9 +58,13 @@ def create(testing=False, debug=False):
             data[i][r]['base'] = automap_base()
             data[i][r]['base'].prepare(data[i][r]['engine'], reflect=True)
 
-    @app.route('/')
+    @app.route('/welcome')
     def root():
         return 'Welcome to cyber.pro portal!'
+
+    @app.route('/')
+    def root():
+        return render_template("index.html")
 
     @app.route('/games', methods=['GET'])
     def get_games():
