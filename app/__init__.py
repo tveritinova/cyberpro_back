@@ -5,7 +5,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
+from sqlalchemy.exc import IntegrityError, InvalidRequestError, OperationalError
 from secure_info import user, password, host, port, socket
 from collections import defaultdict
 import ast
@@ -39,12 +39,21 @@ def create(testing=False, debug=False):
     app = Flask(__name__)
     app.config['DEBUG'] = debug
 
+    crashed_master = None
     data = nested_dict()
 
     for i in range(2):
         for r in ['m', 's']:
-            data[i][r]['engine'] = create_engine('mysql://'+user+':'+password+'@'+host[i][r]+':'+port[i][r] +
-                                                 '/db'+str(i+1)+'?unix_socket='+socket[i][r])
+            try:
+                data[i][r]['engine'] = create_engine('mysql://'+user+':'+password+'@'+host[i][r]+':'+port[i][r] +
+                                                     '/db'+str(i+1)+'?unix_socket='+socket[i][r])
+            except OperationalError:
+                cur_r = ['m','s'].remove(r)[0]
+                data[i][r]['engine'] = create_engine('mysql://'+user+':'+password+'@'+host[i][cur_r]+':'+port[i][cur_r]+
+                                                     '/db'+str(i+1)+'?unix_socket='+socket[i][cur_r])
+                if r == 'm':
+                    crashed_master = i
+
             data[i][r]['session'] = sessionmaker(bind=data[i][r]['engine'])()
             data[i][r]['base'] = automap_base()
             data[i][r]['base'].prepare(data[i][r]['engine'], reflect=True)
@@ -82,6 +91,8 @@ def create(testing=False, debug=False):
     @app.route('/games/<int:game_id>/teams', methods=['POST'])
     def post_teams(game_id):
         cur = data[choose(game_id)]['m']
+        if crashed_master == choose(game_id):
+            return 'Database server crashed, switched to readonly mode', 523
         teams = cur['base'].classes.teams
 
         name = ast.literal_eval(request.data).get('name')
@@ -131,6 +142,8 @@ def create(testing=False, debug=False):
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['POST'])
     def post_players(game_id, team_id):
         cur = data[choose(game_id)]['m']
+        if crashed_master == choose(game_id):
+            return 'Database server crashed, switched to readonly mode', 523
         players = cur['base'].classes.players
 
         name = ast.literal_eval(request.data).get('name')
@@ -176,6 +189,8 @@ def create(testing=False, debug=False):
     @app.route('/games/<int:game_id>/tournaments', methods=['POST'])
     def post_tournaments(game_id):
         cur = data[choose(game_id)]['m']
+        if crashed_master == choose(game_id):
+            return 'Database server crashed, switched to readonly mode', 523
         tournaments = cur['base'].classes.tournaments
 
         name = ast.literal_eval(request.data).get('name')
@@ -220,6 +235,8 @@ def create(testing=False, debug=False):
     @app.route('/games/<int:game_id>/matches', methods=['POST'])
     def post_match(game_id):
         cur = data[choose(game_id)]['m']
+        if crashed_master == choose(game_id):
+            return 'Database server crashed, switched to readonly mode', 523
         matches = cur['base'].classes.matches
 
         tournament_id = ast.literal_eval(request.data).get('tournament_id')
@@ -275,6 +292,8 @@ def create(testing=False, debug=False):
     @app.route('/games/<int:game_id>/transactions', methods=['POST'])
     def post_transactions(game_id):
         cur = data[choose(game_id)]['m']
+        if crashed_master == choose(game_id):
+            return 'Database server crashed, switched to readonly mode', 523
         transactions = cur['base'].classes.players_transactions
         players = cur['base'].classes.players
 
@@ -316,6 +335,8 @@ def create(testing=False, debug=False):
     @app.route('/games/<int:game_id>/tournaments/<int:tournament_id>/teams', methods=['POST'])
     def post_team_for_tournament(game_id, tournament_id):
         cur = data[choose(game_id)]['m']
+        if crashed_master == choose(game_id):
+            return 'Database server crashed, switched to readonly mode', 523
         tournament_command = cur['base'].classes.tournament_command
 
         team_id = ast.literal_eval(request.data).get('team_id')
