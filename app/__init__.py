@@ -67,7 +67,7 @@ def create(testing=False, debug=False):
         return render_template("index.html")
 
     @app.route('/welcome')
-    def root():
+    def welcome():
         return 'Welcome to cyber.pro portal!'
 
     @app.route('/games', methods=['GET'])
