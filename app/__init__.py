@@ -80,6 +80,7 @@ def create(testing=False, debug=False):
         return jsonify(games=res_dict), 200
 
     @app.route('/games/<int:game_id>', methods=['GET'])
+    @cross_origin()
     def get_game(game_id):
         cur = data[0]['s' if not testing else 'm']
         games = cur['base'].classes.games
@@ -90,6 +91,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 200
 
     @app.route('/games/<int:game_id>/teams', methods=['GET'])
+    @cross_origin()
     def get_teams(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         teams = cur['base'].classes.teams
@@ -126,6 +128,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 201
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>', methods=['GET'])
+    @cross_origin()
     def get_team(game_id, team_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         teams = cur['base'].classes.teams
@@ -140,6 +143,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 200
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players', methods=['GET'])
+    @cross_origin()
     def get_players(game_id, team_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         players = cur['base'].classes.players
@@ -180,6 +184,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 201
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/players/<int:player_id>', methods=['GET'])
+    @cross_origin()
     def get_player(game_id, team_id, player_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         players = cur['base'].classes.players
@@ -188,6 +193,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 200
 
     @app.route('/games/<int:game_id>/tournaments', methods=['GET'])
+    @cross_origin()
     def get_tournaments(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournaments = cur['base'].classes.tournaments
@@ -227,6 +233,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 201
 
     @app.route('/games/<int:game_id>/tournaments/<int:tournament_id>', methods=['GET'])
+    @cross_origin()
     def get_tournament(game_id, tournament_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournaments = cur['base'].classes.tournaments
@@ -234,6 +241,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 200
 
     @app.route('/games/<int:game_id>/matches', methods=['GET'])
+    @cross_origin()
     def get_matches(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         matches = cur['base'].classes.matches
@@ -278,6 +286,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 201
 
     @app.route('/games/<int:game_id>/matches/<int:match_id>', methods=['GET'])
+    @cross_origin()
     def get_match(game_id, match_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         matches = cur['base'].classes.matches
@@ -285,6 +294,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 200
 
     @app.route('/games/<int:game_id>/tournaments/<int:tournament_id>/matches', methods=['GET'])
+    @cross_origin()
     def get_match_for_tournament(game_id, tournament_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         matches = cur['base'].classes.matches
@@ -292,6 +302,7 @@ def create(testing=False, debug=False):
         return jsonify(matches=[get_json(d) for d in res_data]), 200
 
     @app.route('/games/<int:game_id>/transactions', methods=['GET'])
+    @cross_origin()
     def get_transactions(game_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         transactions = cur['base'].classes.matches
@@ -335,6 +346,7 @@ def create(testing=False, debug=False):
         return jsonify(get_json(res_data)), 201
 
     @app.route('/games/<int:game_id>/transactions/<int:transaction_id>', methods=['GET'])
+    @cross_origin()
     def get_transaction(game_id, transaction_id):
         cur = data[choose(game_id)]['m']
         transactions = cur['base'].classes.players_transactions
@@ -369,6 +381,7 @@ def create(testing=False, debug=False):
         return '', 201
 
     @app.route('/games/<int:game_id>/tournaments/<int:tournament_id>/teams', methods=['GET'])
+    @cross_origin()
     def get_teams_for_tournament(game_id, tournament_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournament_command = cur['base'].classes.tournament_command
@@ -382,6 +395,7 @@ def create(testing=False, debug=False):
         return jsonify(teams=[get_json(ins) for ins in res]), 200
 
     @app.route('/games/<int:game_id>/teams/<int:team_id>/tournaments', methods=['GET'])
+    @cross_origin()
     def get_tournaments_for_team(game_id, team_id):
         cur = data[choose(game_id)]['s' if not testing else 'm']
         tournament_command = cur['base'].classes.tournament_command
