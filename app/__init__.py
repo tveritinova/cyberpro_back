@@ -62,13 +62,13 @@ def create(testing=False, debug=False):
             data[i][r]['base'] = automap_base()
             data[i][r]['base'].prepare(data[i][r]['engine'], reflect=True)
 
-    @app.route('/welcome')
-    def root():
-        return 'Welcome to cyber.pro portal!'
-
     @app.route('/')
     def root():
         return render_template("index.html")
+
+    @app.route('/welcome')
+    def root():
+        return 'Welcome to cyber.pro portal!'
 
     @app.route('/games', methods=['GET'])
     @cross_origin()
