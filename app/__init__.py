@@ -10,6 +10,7 @@ from secure_info import user, password, host, port, socket
 from collections import defaultdict
 import ast
 import datetime
+from flask_cors import CORS, cross_origin
 
 
 def nested_dict():
@@ -38,6 +39,8 @@ def get_json(instance):
 def create(testing=False, debug=False):
     app = Flask(__name__, static_folder="../../cyberpro_front/static/dist",
                 template_folder="../../cyberpro_front/static")
+    cors = CORS(app)
+    app.config['CORS_HEADERS'] = 'Content-Type'
     app.config['DEBUG'] = debug
 
     crashed_master = None
@@ -68,6 +71,7 @@ def create(testing=False, debug=False):
         return render_template("index.html")
 
     @app.route('/games', methods=['GET'])
+    @cross_origin()
     def get_games():
         cur = data[0]['s' if not testing else 'm']
         games = cur['base'].classes.games
